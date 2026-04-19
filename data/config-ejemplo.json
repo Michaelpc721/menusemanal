@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "familyNames": {
+    "tia": "Tía Lo",
+    "tio": "Tío Macho",
+    "hija": "Michi",
+    "yo": "Mike"
+  },
+  "priceDB": {
+    "aceite de oliva": {
+      "unitLabel": "L",
+      "factor": 1000,
+      "price": 0
+    },
+    "aceitunas": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "aguacate": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "ajo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "ajonjoli": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "apio": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "arroz integral cocido": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "atun en agua escurrido": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "avena": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "banano": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "berenjena": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "brocoli": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "calabaza": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "camaron": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "camote": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "canela": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "cebolla": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "cebolla morada": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "chayote": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "chia": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "chicharos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "chile dulce": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "claras de huevo": {
+      "unitLabel": "unidad",
+      "factor": 1,
+      "price": 0
+    },
+    "coliflor": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "couscous integral cocido": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "culantro": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "curry en polvo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "ensalada mixta": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "esparragos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "espinaca": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "filete de pescado blanco": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "frijol rojo cocido": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "frijoles negros cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "frijoles rojos cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "frijoles tiernos cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "fruta fresca": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "frutos rojos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "galletas integrales": {
+      "unitLabel": "paquete",
+      "factor": 20,
+      "price": 0
+    },
+    "garbanzos cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "hongos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "huevo": {
+      "unitLabel": "docena",
+      "factor": 12,
+      "price": 0
+    },
+    "hummus": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "leche de coco light": {
+      "unitLabel": "L",
+      "factor": 1000,
+      "price": 0
+    },
+    "leche descremada": {
+      "unitLabel": "L",
+      "factor": 1000,
+      "price": 0
+    },
+    "lechuga": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "lentejas cocidas": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "limon": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "maiz": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "mantequilla de mani": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "manzana": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "nueces": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pan integral": {
+      "unitLabel": "paquete",
+      "factor": 20,
+      "price": 0
+    },
+    "papa": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pasta integral cocida": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pechuga de pollo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pepino": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pescado azul economico": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "platano maduro horneado": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "pollo molido magro": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "queso bajo en grasa": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "queso fresco bajo en grasa": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "queso parmesano": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "quinoa cocida": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "repollo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "res magra": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "salsa de soya baja en sodio": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "salsa de tomate natural": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "salsa teriyaki baja en azucar": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "sardinas en agua": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "tofu firme": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "tomate": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "tomate triturado": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "tortilla integral": {
+      "unitLabel": "paquete",
+      "factor": 8,
+      "price": 0
+    },
+    "vainicas": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "yogurt griego natural": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "yuca cocida": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "zanahoria": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    },
+    "zucchini": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 0
+    }
+  }
+}
