@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menú saludable familiar</title>
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="card">
+      <h1>Menú saludable familiar — versión 1</h1>
+      <p class="small" style="margin-top:8px;">Ciclo mensual fijo de 4 semanas. Selecciona una semana y toca un día para abrir sus 4 comidas.</p>
+      <div class="tagline">
+        <span class="tag">2 desayunos alternos</span>
+        <span class="tag">3 brunches rotativos</span>
+        <span class="tag">28 almuerzos distintos</span>
+        <span class="tag">28 cenas distintas</span>
+        <span class="tag">Hija integrada por días reales</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Proteínas principales del ciclo</h3>
+      <p class="small" style="margin-top:8px;">Pollo, pescado blanco, pescado azul económico, res magra, atún/sardinas, huevos, legumbres y tofu.</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="card">
+      <h2>Calendario mensual</h2>
+      <p class="small" style="margin-top:6px;">El menú principal solo muestra semanas y días. Los detalles del día y la compra se abren en ventanas superpuestas.</p>
+      <div class="week-tabs" id="weekTabs"></div>
+      <div class="day-grid" id="dayGrid"></div>
+      <button class="ghost-btn" id="shoppingBtn">Ver compras del mes y por semana</button>
+      <div class="footer-note">
+        La hija aparece solo en: lunes almuerzo, martes desayuno, miércoles brunch, jueves desayuno y brunch, viernes almuerzo, y fines de semana alternos (semanas 1 y 3).
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="overlay" id="dayOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+    <div class="modal-header">
+      <div>
+        <h2 id="dayModalTitle">Detalle del día</h2>
+        <p class="small" id="dayModalText" style="margin-top:6px;"></p>
+      </div>
+      <button class="close-btn" id="closeDayModal" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="meal-grid" id="mealButtons"></div>
+      <section id="mealDetail"></section>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="shoppingOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shoppingModalTitle">
+    <div class="modal-header">
+      <div>
+        <h2 id="shoppingModalTitle">Compras y costos del menú</h2>
+        <p class="small" style="margin-top:6px;">Incluye compras por mes y semana, además de una base editable de precios para estimar costos.</p>
+      </div>
+      <button class="close-btn" id="closeShoppingModal" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="shopping-tabs" id="shoppingTabs"></div>
+      <div class="searchbar">
+        <input type="text" id="searchInput" placeholder="Filtrar ingrediente..." value="">
+      </div>
+      <section id="shoppingSection"></section>
+      <p class="footer-note">Las cantidades son una referencia operativa del menú. Cuando un ingrediente aparece en gramos y supera 1000 g, se muestra en kg. En la pestaña de costos puedes editar la unidad de compra, la equivalencia y el precio por unidad para calcular el estimado mensual y semanal.</p>
+    </div>
+  </div>
+</div>
+
+
+<input type="file" id="configFileInput" accept=".json,application/json" hidden>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
