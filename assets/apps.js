@@ -1,0 +1,805 @@
+const IMAGE_BASE_PATH = 'recetas/';
+const IMAGE_EXTENSIONS = ['jpg','jpeg','png','webp'];
+
+const FAMILY_NAME_DEFAULTS = {
+  tia: 'Tía',
+  tio: 'Tío',
+  hija: 'Hija',
+  yo: 'Tú'
+};
+
+const PRICE_DB_DEFAULTS = {"aceite de oliva": {"unitLabel": "L", "factor": 1000, "price": 0}, "aceitunas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "aguacate": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ajo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ajonjoli": {"unitLabel": "kg", "factor": 1000, "price": 0}, "apio": {"unitLabel": "kg", "factor": 1000, "price": 0}, "arroz integral cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "atun en agua escurrido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "avena": {"unitLabel": "kg", "factor": 1000, "price": 0}, "banano": {"unitLabel": "kg", "factor": 1000, "price": 0}, "berenjena": {"unitLabel": "kg", "factor": 1000, "price": 0}, "brocoli": {"unitLabel": "kg", "factor": 1000, "price": 0}, "calabaza": {"unitLabel": "kg", "factor": 1000, "price": 0}, "camaron": {"unitLabel": "kg", "factor": 1000, "price": 0}, "camote": {"unitLabel": "kg", "factor": 1000, "price": 0}, "canela": {"unitLabel": "kg", "factor": 1000, "price": 0}, "cebolla": {"unitLabel": "kg", "factor": 1000, "price": 0}, "cebolla morada": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chayote": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chia": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chicharos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chile dulce": {"unitLabel": "kg", "factor": 1000, "price": 0}, "claras de huevo": {"unitLabel": "unidad", "factor": 1, "price": 0}, "coliflor": {"unitLabel": "kg", "factor": 1000, "price": 0}, "couscous integral cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "culantro": {"unitLabel": "kg", "factor": 1000, "price": 0}, "curry en polvo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ensalada mixta": {"unitLabel": "kg", "factor": 1000, "price": 0}, "esparragos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "espinaca": {"unitLabel": "kg", "factor": 1000, "price": 0}, "filete de pescado blanco": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijol rojo cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles negros cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles rojos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles tiernos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "fruta fresca": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frutos rojos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "galletas integrales": {"unitLabel": "paquete", "factor": 20, "price": 0}, "garbanzos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "hongos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "huevo": {"unitLabel": "docena", "factor": 12, "price": 0}, "hummus": {"unitLabel": "kg", "factor": 1000, "price": 0}, "leche de coco light": {"unitLabel": "L", "factor": 1000, "price": 0}, "leche descremada": {"unitLabel": "L", "factor": 1000, "price": 0}, "lechuga": {"unitLabel": "kg", "factor": 1000, "price": 0}, "lentejas cocidas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "limon": {"unitLabel": "kg", "factor": 1000, "price": 0}, "maiz": {"unitLabel": "kg", "factor": 1000, "price": 0}, "mantequilla de mani": {"unitLabel": "kg", "factor": 1000, "price": 0}, "manzana": {"unitLabel": "kg", "factor": 1000, "price": 0}, "nueces": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pan integral": {"unitLabel": "paquete", "factor": 20, "price": 0}, "papa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pasta integral cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pechuga de pollo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pepino": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pescado azul economico": {"unitLabel": "kg", "factor": 1000, "price": 0}, "platano maduro horneado": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pollo molido magro": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso bajo en grasa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso fresco bajo en grasa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso parmesano": {"unitLabel": "kg", "factor": 1000, "price": 0}, "quinoa cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "repollo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "res magra": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa de soya baja en sodio": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa de tomate natural": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa teriyaki baja en azucar": {"unitLabel": "kg", "factor": 1000, "price": 0}, "sardinas en agua": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tofu firme": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tomate": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tomate triturado": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tortilla integral": {"unitLabel": "paquete", "factor": 8, "price": 0}, "vainicas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "yogurt griego natural": {"unitLabel": "kg", "factor": 1000, "price": 0}, "yuca cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "zanahoria": {"unitLabel": "kg", "factor": 1000, "price": 0}, "zucchini": {"unitLabel": "kg", "factor": 1000, "price": 0}};
+const CONFIG_STORAGE_KEY = 'menu_saludable_config_v1';
+
+const calendarData = [{"title": "Semana 1 - Lunes", "week": 1, "day": "Lunes", "daynum": 1, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Pollo al limón con arroz integral y brócoli", "category": "Almuerzo", "macros": {"cal": 520, "protein": 42, "carbs": 42, "fat": 18, "fiber": 6}, "micros": ["vitamina C", "selenio", "niacina", "folato"], "ingredients": [{"name": "pechuga de pollo", "qty": 552.5, "unit": "g"}, {"name": "arroz integral cocido", "qty": 510.0, "unit": "g"}, {"name": "brocoli", "qty": 510.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}, {"name": "limon", "qty": 85.0, "unit": "g"}, {"name": "ajo", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 520, "protein": 42.0, "carbs": 42.0, "fat": 18.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 494, "protein": 39.9, "carbs": 39.9, "fat": 17.1, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 806, "protein": 65.1, "carbs": 65.1, "fat": 27.9, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 390, "protein": 31.5, "carbs": 31.5, "fat": 13.5, "fiber": 4.5}}}, "cena": {"name": "Crema de vegetales con pollo desmenuzado", "category": "Cena", "macros": {"cal": 390, "protein": 31, "carbs": 22, "fat": 16, "fiber": 5}, "micros": ["vitamina A", "potasio", "niacina", "folato"], "ingredients": [{"name": "pechuga de pollo", "qty": 320.0, "unit": "g"}, {"name": "calabaza", "qty": 576.0, "unit": "g"}, {"name": "zanahoria", "qty": 224.0, "unit": "g"}, {"name": "apio", "qty": 128.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 29.4, "carbs": 20.9, "fat": 15.2, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 351, "protein": 27.9, "carbs": 19.8, "fat": 14.4, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 526, "protein": 41.9, "carbs": 29.7, "fat": 21.6, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 1 - Martes", "week": 1, "day": "Martes", "daynum": 2, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Pescado al horno con camote y ensalada", "category": "Almuerzo", "macros": {"cal": 500, "protein": 36, "carbs": 38, "fat": 18, "fiber": 7}, "micros": ["vitamina A", "potasio", "yodo", "vitamina C"], "ingredients": [{"name": "filete de pescado blanco", "qty": 490.0, "unit": "g"}, {"name": "camote", "qty": 630.0, "unit": "g"}, {"name": "lechuga", "qty": 210.0, "unit": "g"}, {"name": "tomate", "qty": 245.0, "unit": "g"}, {"name": "pepino", "qty": 210.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 500, "protein": 36.0, "carbs": 38.0, "fat": 18.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 475, "protein": 34.2, "carbs": 36.1, "fat": 17.1, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 775, "protein": 55.8, "carbs": 58.9, "fat": 27.9, "fiber": 10.8}, "hija": {"present": false}}}, "cena": {"name": "Tacos de lechuga con pollo y aguacate", "category": "Cena", "macros": {"cal": 420, "protein": 32, "carbs": 14, "fat": 25, "fiber": 6}, "micros": ["potasio", "folato", "vitamina E", "zinc"], "ingredients": [{"name": "pollo molido magro", "qty": 384.0, "unit": "g"}, {"name": "lechuga", "qty": 320.0, "unit": "g"}, {"name": "tomate", "qty": 224.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "aguacate", "qty": 160.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 96.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 399, "protein": 30.4, "carbs": 13.3, "fat": 23.8, "fiber": 5.7}, "tio": {"present": true, "multiplier": 0.9, "cal": 378, "protein": 28.8, "carbs": 12.6, "fat": 22.5, "fiber": 5.4}, "yo": {"present": true, "multiplier": 1.35, "cal": 567, "protein": 43.2, "carbs": 18.9, "fat": 33.8, "fiber": 8.1}, "hija": {"present": false}}}}}, {"title": "Semana 1 - Miércoles", "week": 1, "day": "Miércoles", "daynum": 3, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 988, "unit": "ml"}, {"name": "banano", "qty": 316.0, "unit": "g"}, {"name": "avena", "qty": 98.8, "unit": "g"}, {"name": "mantequilla de mani", "qty": 59.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.65, "cal": 195, "protein": 10.4, "carbs": 21.4, "fat": 7.2, "fiber": 2.6}}}, "almuerzo": {"name": "Pollo salteado con quinoa y vegetales", "category": "Almuerzo", "macros": {"cal": 510, "protein": 39, "carbs": 37, "fat": 20, "fiber": 5}, "micros": ["zinc", "hierro", "magnesio", "vitamina C"], "ingredients": [{"name": "pollo molido magro", "qty": 455.0, "unit": "g"}, {"name": "quinoa cocida", "qty": 455.0, "unit": "g"}, {"name": "zucchini", "qty": 280.0, "unit": "g"}, {"name": "chile dulce", "qty": 245.0, "unit": "g"}, {"name": "cebolla", "qty": 140.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 510, "protein": 39.0, "carbs": 37.0, "fat": 20.0, "fiber": 5.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 484, "protein": 37.0, "carbs": 35.1, "fat": 19.0, "fiber": 4.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 790, "protein": 60.5, "carbs": 57.4, "fat": 31.0, "fiber": 7.8}, "hija": {"present": false}}}, "cena": {"name": "Sopa de lentejas con verduras", "category": "Cena", "macros": {"cal": 380, "protein": 20, "carbs": 40, "fat": 12, "fiber": 13}, "micros": ["hierro", "folato", "vitamina A", "magnesio"], "ingredients": [{"name": "lentejas cocidas", "qty": 576.0, "unit": "g"}, {"name": "zanahoria", "qty": 192.0, "unit": "g"}, {"name": "apio", "qty": 128.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "espinaca", "qty": 128.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 361, "protein": 19.0, "carbs": 38.0, "fat": 11.4, "fiber": 12.3}, "tio": {"present": true, "multiplier": 0.9, "cal": 342, "protein": 18.0, "carbs": 36.0, "fat": 10.8, "fiber": 11.7}, "yo": {"present": true, "multiplier": 1.35, "cal": 513, "protein": 27.0, "carbs": 54.0, "fat": 16.2, "fiber": 17.6}, "hija": {"present": false}}}}}, {"title": "Semana 1 - Jueves", "week": 1, "day": "Jueves", "daynum": 4, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 671.5, "unit": "g"}, {"name": "nueces", "qty": 59.2, "unit": "g"}, {"name": "frutos rojos", "qty": 276.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": true, "multiplier": 0.65, "cal": 162, "protein": 12.3, "carbs": 9.8, "fat": 7.8, "fiber": 2.0}}}, "almuerzo": {"name": "Res magra con frijoles negros y pico de gallo", "category": "Almuerzo", "macros": {"cal": 560, "protein": 40, "carbs": 38, "fat": 24, "fiber": 10}, "micros": ["hierro", "zinc", "folato", "potasio"], "ingredients": [{"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "frijoles negros cocidos", "qty": 350.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 280.0, "unit": "g"}, {"name": "tomate", "qty": 280.0, "unit": "g"}, {"name": "cebolla", "qty": 105.0, "unit": "g"}, {"name": "culantro", "qty": 35.0, "unit": "g"}, {"name": "aguacate", "qty": 140.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 560, "protein": 40.0, "carbs": 38.0, "fat": 24.0, "fiber": 10.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 532, "protein": 38.0, "carbs": 36.1, "fat": 22.8, "fiber": 9.5}, "yo": {"present": true, "multiplier": 1.55, "cal": 868, "protein": 62.0, "carbs": 58.9, "fat": 37.2, "fiber": 15.5}, "hija": {"present": false}}}, "cena": {"name": "Ensalada de pescado azul con pepino y quinoa", "category": "Cena", "macros": {"cal": 460, "protein": 31, "carbs": 19, "fat": 28, "fiber": 4}, "micros": ["omega-3", "vitamina D", "potasio", "folato"], "ingredients": [{"name": "pescado azul economico", "qty": 384.0, "unit": "g"}, {"name": "quinoa cocida", "qty": 288.0, "unit": "g"}, {"name": "lechuga", "qty": 192.0, "unit": "g"}, {"name": "pepino", "qty": 256.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 437, "protein": 29.4, "carbs": 18.1, "fat": 26.6, "fiber": 3.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 414, "protein": 27.9, "carbs": 17.1, "fat": 25.2, "fiber": 3.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 621, "protein": 41.9, "carbs": 25.7, "fat": 37.8, "fiber": 5.4}, "hija": {"present": false}}}}}, {"title": "Semana 1 - Viernes", "week": 1, "day": "Viernes", "daynum": 5, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Lentejas guisadas con huevo y ensalada", "category": "Almuerzo", "macros": {"cal": 480, "protein": 28, "carbs": 42, "fat": 18, "fiber": 12}, "micros": ["hierro", "folato", "vitamina A", "colina"], "ingredients": [{"name": "lentejas cocidas", "qty": 765.0, "unit": "g"}, {"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "zanahoria", "qty": 255.0, "unit": "g"}, {"name": "apio", "qty": 170.0, "unit": "g"}, {"name": "lechuga", "qty": 212.5, "unit": "g"}, {"name": "pepino", "qty": 255.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 480, "protein": 28.0, "carbs": 42.0, "fat": 18.0, "fiber": 12.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 456, "protein": 26.6, "carbs": 39.9, "fat": 17.1, "fiber": 11.4}, "yo": {"present": true, "multiplier": 1.55, "cal": 744, "protein": 43.4, "carbs": 65.1, "fat": 27.9, "fiber": 18.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 360, "protein": 21.0, "carbs": 31.5, "fat": 13.5, "fiber": 9.0}}}, "cena": {"name": "Pollo salteado con coliflor y chile dulce", "category": "Cena", "macros": {"cal": 395, "protein": 34, "carbs": 17, "fat": 18, "fiber": 5}, "micros": ["vitamina C", "niacina", "folato", "potasio"], "ingredients": [{"name": "pechuga de pollo", "qty": 384.0, "unit": "g"}, {"name": "coliflor", "qty": 576.0, "unit": "g"}, {"name": "chile dulce", "qty": 224.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 375, "protein": 32.3, "carbs": 16.1, "fat": 17.1, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 356, "protein": 30.6, "carbs": 15.3, "fat": 16.2, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 533, "protein": 45.9, "carbs": 23.0, "fat": 24.3, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 1 - Sábado", "week": 1, "day": "Sábado", "daynum": 6, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 988, "unit": "ml"}, {"name": "banano", "qty": 316.0, "unit": "g"}, {"name": "avena", "qty": 98.8, "unit": "g"}, {"name": "mantequilla de mani", "qty": 59.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.65, "cal": 195, "protein": 10.4, "carbs": 21.4, "fat": 7.2, "fiber": 2.6}}}, "almuerzo": {"name": "Fajitas de pollo en tortilla integral", "category": "Almuerzo", "macros": {"cal": 530, "protein": 38, "carbs": 36, "fat": 22, "fiber": 8}, "micros": ["calcio", "vitamina C", "niacina", "potasio"], "ingredients": [{"name": "pechuga de pollo", "qty": 510.0, "unit": "g"}, {"name": "tortilla integral", "qty": 8.5, "unit": "unidad"}, {"name": "chile dulce", "qty": 340.0, "unit": "g"}, {"name": "cebolla", "qty": 212.5, "unit": "g"}, {"name": "yogurt griego natural", "qty": 170.0, "unit": "g"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 530, "protein": 38.0, "carbs": 36.0, "fat": 22.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 504, "protein": 36.1, "carbs": 34.2, "fat": 20.9, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 822, "protein": 58.9, "carbs": 55.8, "fat": 34.1, "fiber": 12.4}, "hija": {"present": true, "multiplier": 0.75, "cal": 398, "protein": 28.5, "carbs": 27.0, "fat": 16.5, "fiber": 6.0}}}, "cena": {"name": "Tortilla española ligera con ensalada", "category": "Cena", "macros": {"cal": 410, "protein": 24, "carbs": 24, "fat": 22, "fiber": 4}, "micros": ["colina", "potasio", "vitamina A", "hierro"], "ingredients": [{"name": "huevo", "qty": 8.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.0, "unit": "unidad"}, {"name": "papa", "qty": 474.0, "unit": "g"}, {"name": "cebolla", "qty": 118.5, "unit": "g"}, {"name": "lechuga", "qty": 237.0, "unit": "g"}, {"name": "tomate", "qty": 237.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 19.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 390, "protein": 22.8, "carbs": 22.8, "fat": 20.9, "fiber": 3.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 369, "protein": 21.6, "carbs": 21.6, "fat": 19.8, "fiber": 3.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 554, "protein": 32.4, "carbs": 32.4, "fat": 29.7, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.75, "cal": 308, "protein": 18.0, "carbs": 18.0, "fat": 16.5, "fiber": 3.0}}}}}, {"title": "Semana 1 - Domingo", "week": 1, "day": "Domingo", "daynum": 7, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 671.5, "unit": "g"}, {"name": "nueces", "qty": 59.2, "unit": "g"}, {"name": "frutos rojos", "qty": 276.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": true, "multiplier": 0.65, "cal": 162, "protein": 12.3, "carbs": 9.8, "fat": 7.8, "fiber": 2.0}}}, "almuerzo": {"name": "Atún con pasta integral y vegetales", "category": "Almuerzo", "macros": {"cal": 500, "protein": 37, "carbs": 39, "fat": 17, "fiber": 6}, "micros": ["omega-3", "selenio", "folato", "vitamina C"], "ingredients": [{"name": "atun en agua escurrido", "qty": 510.0, "unit": "g"}, {"name": "pasta integral cocida", "qty": 510.0, "unit": "g"}, {"name": "brocoli", "qty": 425.0, "unit": "g"}, {"name": "tomate", "qty": 255.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 500, "protein": 37.0, "carbs": 39.0, "fat": 17.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 475, "protein": 35.1, "carbs": 37.0, "fat": 16.1, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 775, "protein": 57.4, "carbs": 60.5, "fat": 26.4, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 375, "protein": 27.8, "carbs": 29.2, "fat": 12.8, "fiber": 4.5}}}, "cena": {"name": "Filete de pescado con ensalada de repollo", "category": "Cena", "macros": {"cal": 400, "protein": 32, "carbs": 13, "fat": 22, "fiber": 5}, "micros": ["yodo", "vitamina C", "vitamina A", "potasio"], "ingredients": [{"name": "filete de pescado blanco", "qty": 553.0, "unit": "g"}, {"name": "repollo", "qty": 474.0, "unit": "g"}, {"name": "zanahoria", "qty": 197.5, "unit": "g"}, {"name": "aguacate", "qty": 158.0, "unit": "g"}, {"name": "limon", "qty": 79.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 19.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 380, "protein": 30.4, "carbs": 12.3, "fat": 20.9, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 360, "protein": 28.8, "carbs": 11.7, "fat": 19.8, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 540, "protein": 43.2, "carbs": 17.6, "fat": 29.7, "fiber": 6.8}, "hija": {"present": true, "multiplier": 0.75, "cal": 300, "protein": 24.0, "carbs": 9.8, "fat": 16.5, "fiber": 3.8}}}}}, {"title": "Semana 2 - Lunes", "week": 2, "day": "Lunes", "daynum": 8, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Pollo al curry suave con arroz y vainicas", "category": "Almuerzo", "macros": {"cal": 515, "protein": 39, "carbs": 39, "fat": 19, "fiber": 6}, "micros": ["manganeso", "niacina", "vitamina K", "potasio"], "ingredients": [{"name": "pechuga de pollo", "qty": 531.2, "unit": "g"}, {"name": "arroz integral cocido", "qty": 467.5, "unit": "g"}, {"name": "vainicas", "qty": 510.0, "unit": "g"}, {"name": "leche de coco light", "qty": 212, "unit": "ml"}, {"name": "cebolla", "qty": 127.5, "unit": "g"}, {"name": "curry en polvo", "qty": 12.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 515, "protein": 39.0, "carbs": 39.0, "fat": 19.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 489, "protein": 37.0, "carbs": 37.0, "fat": 18.1, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 798, "protein": 60.5, "carbs": 60.5, "fat": 29.4, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 386, "protein": 29.2, "carbs": 29.2, "fat": 14.2, "fiber": 4.5}}}, "cena": {"name": "Bowl de tofu con vegetales asados", "category": "Cena", "macros": {"cal": 410, "protein": 22, "carbs": 18, "fat": 24, "fiber": 6}, "micros": ["calcio", "hierro", "vitamina C", "magnesio"], "ingredients": [{"name": "tofu firme", "qty": 512.0, "unit": "g"}, {"name": "zucchini", "qty": 320.0, "unit": "g"}, {"name": "berenjena", "qty": 320.0, "unit": "g"}, {"name": "tomate", "qty": 224.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}, {"name": "ajonjoli", "qty": 12.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 390, "protein": 20.9, "carbs": 17.1, "fat": 22.8, "fiber": 5.7}, "tio": {"present": true, "multiplier": 0.9, "cal": 369, "protein": 19.8, "carbs": 16.2, "fat": 21.6, "fiber": 5.4}, "yo": {"present": true, "multiplier": 1.35, "cal": 554, "protein": 29.7, "carbs": 24.3, "fat": 32.4, "fiber": 8.1}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Martes", "week": 2, "day": "Martes", "daynum": 9, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 825, "unit": "ml"}, {"name": "banano", "qty": 264.0, "unit": "g"}, {"name": "avena", "qty": 82.5, "unit": "g"}, {"name": "mantequilla de mani", "qty": 49.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": false}}}, "almuerzo": {"name": "Pescado azul con papa y espárragos", "category": "Almuerzo", "macros": {"cal": 560, "protein": 36, "carbs": 32, "fat": 28, "fiber": 5}, "micros": ["omega-3", "vitamina D", "potasio", "folato"], "ingredients": [{"name": "pescado azul economico", "qty": 455.0, "unit": "g"}, {"name": "papa", "qty": 595.0, "unit": "g"}, {"name": "esparragos", "qty": 420.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}, {"name": "limon", "qty": 52.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 560, "protein": 36.0, "carbs": 32.0, "fat": 28.0, "fiber": 5.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 532, "protein": 34.2, "carbs": 30.4, "fat": 26.6, "fiber": 4.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 868, "protein": 55.8, "carbs": 49.6, "fat": 43.4, "fiber": 7.8}, "hija": {"present": false}}}, "cena": {"name": "Sopa de pollo con verduras y garbanzos", "category": "Cena", "macros": {"cal": 405, "protein": 31, "carbs": 24, "fat": 13, "fiber": 6}, "micros": ["folato", "hierro", "niacina", "vitamina A"], "ingredients": [{"name": "pechuga de pollo", "qty": 320.0, "unit": "g"}, {"name": "garbanzos cocidos", "qty": 256.0, "unit": "g"}, {"name": "zanahoria", "qty": 192.0, "unit": "g"}, {"name": "apio", "qty": 128.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 385, "protein": 29.4, "carbs": 22.8, "fat": 12.3, "fiber": 5.7}, "tio": {"present": true, "multiplier": 0.9, "cal": 364, "protein": 27.9, "carbs": 21.6, "fat": 11.7, "fiber": 5.4}, "yo": {"present": true, "multiplier": 1.35, "cal": 547, "protein": 41.9, "carbs": 32.4, "fat": 17.6, "fiber": 8.1}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Miércoles", "week": 2, "day": "Miércoles", "daynum": 10, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 671.5, "unit": "g"}, {"name": "nueces", "qty": 59.2, "unit": "g"}, {"name": "frutos rojos", "qty": 276.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": true, "multiplier": 0.65, "cal": 162, "protein": 12.3, "carbs": 9.8, "fat": 7.8, "fiber": 2.0}}}, "almuerzo": {"name": "Tazón de garbanzos con pollo y pepino", "category": "Almuerzo", "macros": {"cal": 520, "protein": 37, "carbs": 34, "fat": 21, "fiber": 9}, "micros": ["folato", "hierro", "vitamina C", "manganeso"], "ingredients": [{"name": "pechuga de pollo", "qty": 350.0, "unit": "g"}, {"name": "garbanzos cocidos", "qty": 420.0, "unit": "g"}, {"name": "pepino", "qty": 280.0, "unit": "g"}, {"name": "tomate", "qty": 280.0, "unit": "g"}, {"name": "lechuga", "qty": 175.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 520, "protein": 37.0, "carbs": 34.0, "fat": 21.0, "fiber": 9.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 494, "protein": 35.1, "carbs": 32.3, "fat": 19.9, "fiber": 8.5}, "yo": {"present": true, "multiplier": 1.55, "cal": 806, "protein": 57.4, "carbs": 52.7, "fat": 32.6, "fiber": 14.0}, "hija": {"present": false}}}, "cena": {"name": "Ensalada griega con pollo", "category": "Cena", "macros": {"cal": 420, "protein": 33, "carbs": 12, "fat": 24, "fiber": 4}, "micros": ["calcio", "vitamina C", "niacina", "vitamina E"], "ingredients": [{"name": "pechuga de pollo", "qty": 352.0, "unit": "g"}, {"name": "lechuga", "qty": 224.0, "unit": "g"}, {"name": "tomate", "qty": 256.0, "unit": "g"}, {"name": "pepino", "qty": 224.0, "unit": "g"}, {"name": "queso fresco bajo en grasa", "qty": 96.0, "unit": "g"}, {"name": "aceitunas", "qty": 64.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 399, "protein": 31.3, "carbs": 11.4, "fat": 22.8, "fiber": 3.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 378, "protein": 29.7, "carbs": 10.8, "fat": 21.6, "fiber": 3.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 567, "protein": 44.6, "carbs": 16.2, "fat": 32.4, "fiber": 5.4}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Jueves", "week": 2, "day": "Jueves", "daynum": 11, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 237.0, "unit": "g"}, {"name": "zanahoria", "qty": 316.0, "unit": "g"}, {"name": "pepino", "qty": 395.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": true, "multiplier": 0.65, "cal": 143, "protein": 5.2, "carbs": 14.3, "fat": 7.2, "fiber": 4.5}}}, "almuerzo": {"name": "Picadillo de carne magra con yuca", "category": "Almuerzo", "macros": {"cal": 545, "protein": 35, "carbs": 41, "fat": 21, "fiber": 6}, "micros": ["hierro", "zinc", "vitamina A", "vitamina C"], "ingredients": [{"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "yuca cocida", "qty": 525.0, "unit": "g"}, {"name": "zanahoria", "qty": 210.0, "unit": "g"}, {"name": "vainicas", "qty": 210.0, "unit": "g"}, {"name": "cebolla", "qty": 105.0, "unit": "g"}, {"name": "chile dulce", "qty": 175.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 545, "protein": 35.0, "carbs": 41.0, "fat": 21.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 518, "protein": 33.2, "carbs": 38.9, "fat": 19.9, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 845, "protein": 54.2, "carbs": 63.6, "fat": 32.6, "fiber": 9.3}, "hija": {"present": false}}}, "cena": {"name": "Revuelto de huevo con hongos y espinaca", "category": "Cena", "macros": {"cal": 380, "protein": 27, "carbs": 10, "fat": 23, "fiber": 3}, "micros": ["selenio", "colina", "hierro", "vitamina A"], "ingredients": [{"name": "huevo", "qty": 6.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 6.5, "unit": "unidad"}, {"name": "hongos", "qty": 288.0, "unit": "g"}, {"name": "espinaca", "qty": 160.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 361, "protein": 25.6, "carbs": 9.5, "fat": 21.8, "fiber": 2.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 342, "protein": 24.3, "carbs": 9.0, "fat": 20.7, "fiber": 2.7}, "yo": {"present": true, "multiplier": 1.35, "cal": 513, "protein": 36.5, "carbs": 13.5, "fat": 31.1, "fiber": 4.1}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Viernes", "week": 2, "day": "Viernes", "daynum": 12, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 825, "unit": "ml"}, {"name": "banano", "qty": 264.0, "unit": "g"}, {"name": "avena", "qty": 82.5, "unit": "g"}, {"name": "mantequilla de mani", "qty": 49.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": false}}}, "almuerzo": {"name": "Tortitas de atún con puré de coliflor", "category": "Almuerzo", "macros": {"cal": 470, "protein": 38, "carbs": 21, "fat": 20, "fiber": 6}, "micros": ["selenio", "omega-3", "vitamina C", "colina"], "ingredients": [{"name": "atun en agua escurrido", "qty": 510.0, "unit": "g"}, {"name": "huevo", "qty": 4.0, "unit": "unidad"}, {"name": "avena", "qty": 85.0, "unit": "g"}, {"name": "coliflor", "qty": 935.0, "unit": "g"}, {"name": "ajo", "qty": 17.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 470, "protein": 38.0, "carbs": 21.0, "fat": 20.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 446, "protein": 36.1, "carbs": 19.9, "fat": 19.0, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 728, "protein": 58.9, "carbs": 32.6, "fat": 31.0, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 352, "protein": 28.5, "carbs": 15.8, "fat": 15.0, "fiber": 4.5}}}, "cena": {"name": "Atún con aguacate sobre tostada integral", "category": "Cena", "macros": {"cal": 415, "protein": 30, "carbs": 24, "fat": 20, "fiber": 6}, "micros": ["omega-3", "selenio", "potasio", "vitamina E"], "ingredients": [{"name": "atun en agua escurrido", "qty": 320.0, "unit": "g"}, {"name": "pan integral", "qty": 6.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 160.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "limon", "qty": 32.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 394, "protein": 28.5, "carbs": 22.8, "fat": 19.0, "fiber": 5.7}, "tio": {"present": true, "multiplier": 0.9, "cal": 374, "protein": 27.0, "carbs": 21.6, "fat": 18.0, "fiber": 5.4}, "yo": {"present": true, "multiplier": 1.35, "cal": 560, "protein": 40.5, "carbs": 32.4, "fat": 27.0, "fiber": 8.1}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Sábado", "week": 2, "day": "Sábado", "daynum": 13, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Pechuga rellena de espinaca con quinoa", "category": "Almuerzo", "macros": {"cal": 530, "protein": 44, "carbs": 31, "fat": 22, "fiber": 4}, "micros": ["calcio", "hierro", "magnesio", "vitamina A"], "ingredients": [{"name": "pechuga de pollo", "qty": 490.0, "unit": "g"}, {"name": "espinaca", "qty": 210.0, "unit": "g"}, {"name": "queso bajo en grasa", "qty": 87.5, "unit": "g"}, {"name": "quinoa cocida", "qty": 420.0, "unit": "g"}, {"name": "tomate", "qty": 210.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 530, "protein": 44.0, "carbs": 31.0, "fat": 22.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 504, "protein": 41.8, "carbs": 29.4, "fat": 20.9, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 822, "protein": 68.2, "carbs": 48.1, "fat": 34.1, "fiber": 6.2}, "hija": {"present": false}}}, "cena": {"name": "Sopa minestrone proteica con pollo molido", "category": "Cena", "macros": {"cal": 400, "protein": 28, "carbs": 27, "fat": 16, "fiber": 8}, "micros": ["folato", "hierro", "vitamina A", "licopeno"], "ingredients": [{"name": "frijoles rojos cocidos", "qty": 320.0, "unit": "g"}, {"name": "pollo molido magro", "qty": 288.0, "unit": "g"}, {"name": "zucchini", "qty": 192.0, "unit": "g"}, {"name": "zanahoria", "qty": 160.0, "unit": "g"}, {"name": "apio", "qty": 96.0, "unit": "g"}, {"name": "tomate triturado", "qty": 320.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 380, "protein": 26.6, "carbs": 25.6, "fat": 15.2, "fiber": 7.6}, "tio": {"present": true, "multiplier": 0.9, "cal": 360, "protein": 25.2, "carbs": 24.3, "fat": 14.4, "fiber": 7.2}, "yo": {"present": true, "multiplier": 1.35, "cal": 540, "protein": 37.8, "carbs": 36.5, "fat": 21.6, "fiber": 10.8}, "hija": {"present": false}}}}}, {"title": "Semana 2 - Domingo", "week": 2, "day": "Domingo", "daynum": 14, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Chili de pollo y frijol rojo", "category": "Almuerzo", "macros": {"cal": 525, "protein": 40, "carbs": 35, "fat": 19, "fiber": 10}, "micros": ["hierro", "folato", "vitamina C", "potasio"], "ingredients": [{"name": "pollo molido magro", "qty": 455.0, "unit": "g"}, {"name": "frijol rojo cocido", "qty": 420.0, "unit": "g"}, {"name": "tomate triturado", "qty": 350.0, "unit": "g"}, {"name": "cebolla", "qty": 140.0, "unit": "g"}, {"name": "chile dulce", "qty": 175.0, "unit": "g"}, {"name": "maiz", "qty": 140.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 525, "protein": 40.0, "carbs": 35.0, "fat": 19.0, "fiber": 10.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 499, "protein": 38.0, "carbs": 33.2, "fat": 18.1, "fiber": 9.5}, "yo": {"present": true, "multiplier": 1.55, "cal": 814, "protein": 62.0, "carbs": 54.2, "fat": 29.4, "fiber": 15.5}, "hija": {"present": false}}}, "cena": {"name": "Pollo al ajillo con ensalada tibia", "category": "Cena", "macros": {"cal": 395, "protein": 35, "carbs": 15, "fat": 18, "fiber": 5}, "micros": ["vitamina C", "niacina", "vitamina A", "selenio"], "ingredients": [{"name": "pechuga de pollo", "qty": 384.0, "unit": "g"}, {"name": "brocoli", "qty": 320.0, "unit": "g"}, {"name": "zanahoria", "qty": 192.0, "unit": "g"}, {"name": "lechuga", "qty": 160.0, "unit": "g"}, {"name": "ajo", "qty": 16.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 375, "protein": 33.2, "carbs": 14.2, "fat": 17.1, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 356, "protein": 31.5, "carbs": 13.5, "fat": 16.2, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 533, "protein": 47.2, "carbs": 20.2, "fat": 24.3, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Lunes", "week": 3, "day": "Lunes", "daynum": 15, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 825, "unit": "ml"}, {"name": "banano", "qty": 264.0, "unit": "g"}, {"name": "avena", "qty": 82.5, "unit": "g"}, {"name": "mantequilla de mani", "qty": 49.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": false}}}, "almuerzo": {"name": "Bowl de tofu con arroz y vegetales", "category": "Almuerzo", "macros": {"cal": 500, "protein": 25, "carbs": 36, "fat": 23, "fiber": 6}, "micros": ["calcio", "hierro", "vitamina A", "magnesio"], "ingredients": [{"name": "tofu firme", "qty": 680.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 467.5, "unit": "g"}, {"name": "brocoli", "qty": 425.0, "unit": "g"}, {"name": "zanahoria", "qty": 255.0, "unit": "g"}, {"name": "salsa de soya baja en sodio", "qty": 34.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 500, "protein": 25.0, "carbs": 36.0, "fat": 23.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 475, "protein": 23.8, "carbs": 34.2, "fat": 21.8, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 775, "protein": 38.8, "carbs": 55.8, "fat": 35.6, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 375, "protein": 18.8, "carbs": 27.0, "fat": 17.2, "fiber": 4.5}}}, "cena": {"name": "Ceviche de pescado con galletas integrales", "category": "Cena", "macros": {"cal": 360, "protein": 29, "carbs": 20, "fat": 10, "fiber": 3}, "micros": ["vitamina C", "yodo", "selenio", "folato"], "ingredients": [{"name": "filete de pescado blanco", "qty": 416.0, "unit": "g"}, {"name": "limon", "qty": 96.0, "unit": "g"}, {"name": "tomate", "qty": 224.0, "unit": "g"}, {"name": "cebolla morada", "qty": 128.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}, {"name": "galletas integrales", "qty": 13.0, "unit": "unidad"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 27.5, "carbs": 19.0, "fat": 9.5, "fiber": 2.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 324, "protein": 26.1, "carbs": 18.0, "fat": 9.0, "fiber": 2.7}, "yo": {"present": true, "multiplier": 1.35, "cal": 486, "protein": 39.2, "carbs": 27.0, "fat": 13.5, "fiber": 4.1}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Martes", "week": 3, "day": "Martes", "daynum": 16, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Pollo mediterráneo con couscous integral", "category": "Almuerzo", "macros": {"cal": 515, "protein": 38, "carbs": 36, "fat": 20, "fiber": 5}, "micros": ["vitamina E", "niacina", "potasio", "selenio"], "ingredients": [{"name": "pechuga de pollo", "qty": 437.5, "unit": "g"}, {"name": "couscous integral cocido", "qty": 420.0, "unit": "g"}, {"name": "tomate", "qty": 245.0, "unit": "g"}, {"name": "pepino", "qty": 245.0, "unit": "g"}, {"name": "aceitunas", "qty": 70.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 515, "protein": 38.0, "carbs": 36.0, "fat": 20.0, "fiber": 5.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 489, "protein": 36.1, "carbs": 34.2, "fat": 19.0, "fiber": 4.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 798, "protein": 58.9, "carbs": 55.8, "fat": 31.0, "fiber": 7.8}, "hija": {"present": false}}}, "cena": {"name": "Ensalada de huevo, frijol y vegetales", "category": "Cena", "macros": {"cal": 405, "protein": 21, "carbs": 21, "fat": 23, "fiber": 8}, "micros": ["folato", "hierro", "colina", "potasio"], "ingredients": [{"name": "huevo", "qty": 6.5, "unit": "unidad"}, {"name": "frijoles negros cocidos", "qty": 288.0, "unit": "g"}, {"name": "lechuga", "qty": 192.0, "unit": "g"}, {"name": "pepino", "qty": 224.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 385, "protein": 19.9, "carbs": 19.9, "fat": 21.8, "fiber": 7.6}, "tio": {"present": true, "multiplier": 0.9, "cal": 364, "protein": 18.9, "carbs": 18.9, "fat": 20.7, "fiber": 7.2}, "yo": {"present": true, "multiplier": 1.35, "cal": 547, "protein": 28.4, "carbs": 28.4, "fat": 31.1, "fiber": 10.8}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Miércoles", "week": 3, "day": "Miércoles", "daynum": 17, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 237.0, "unit": "g"}, {"name": "zanahoria", "qty": 316.0, "unit": "g"}, {"name": "pepino", "qty": 395.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": true, "multiplier": 0.65, "cal": 143, "protein": 5.2, "carbs": 14.3, "fat": 7.2, "fiber": 4.5}}}, "almuerzo": {"name": "Pescado a la plancha con frijoles tiernos y arroz", "category": "Almuerzo", "macros": {"cal": 495, "protein": 35, "carbs": 35, "fat": 18, "fiber": 7}, "micros": ["yodo", "folato", "vitamina C", "potasio"], "ingredients": [{"name": "filete de pescado blanco", "qty": 490.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 350.0, "unit": "g"}, {"name": "frijoles tiernos cocidos", "qty": 420.0, "unit": "g"}, {"name": "ensalada mixta", "qty": 350.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 495, "protein": 35.0, "carbs": 35.0, "fat": 18.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 470, "protein": 33.2, "carbs": 33.2, "fat": 17.1, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 767, "protein": 54.2, "carbs": 54.2, "fat": 27.9, "fiber": 10.8}, "hija": {"present": false}}}, "cena": {"name": "Crema de brócoli con pollo", "category": "Cena", "macros": {"cal": 390, "protein": 31, "carbs": 15, "fat": 18, "fiber": 5}, "micros": ["calcio", "vitamina C", "folato", "zinc"], "ingredients": [{"name": "pollo molido magro", "qty": 320.0, "unit": "g"}, {"name": "brocoli", "qty": 576.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "ajo", "qty": 12.8, "unit": "g"}, {"name": "leche descremada", "qty": 384, "unit": "ml"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 29.4, "carbs": 14.2, "fat": 17.1, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 351, "protein": 27.9, "carbs": 13.5, "fat": 16.2, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 526, "protein": 41.9, "carbs": 20.2, "fat": 24.3, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Jueves", "week": 3, "day": "Jueves", "daynum": 18, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 988, "unit": "ml"}, {"name": "banano", "qty": 316.0, "unit": "g"}, {"name": "avena", "qty": 98.8, "unit": "g"}, {"name": "mantequilla de mani", "qty": 59.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.65, "cal": 195, "protein": 10.4, "carbs": 21.4, "fat": 7.2, "fiber": 2.6}}}, "almuerzo": {"name": "Albóndigas de res magra con pasta integral", "category": "Almuerzo", "macros": {"cal": 540, "protein": 38, "carbs": 37, "fat": 23, "fiber": 6}, "micros": ["hierro", "licopeno", "zinc", "calcio"], "ingredients": [{"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "pasta integral cocida", "qty": 385.0, "unit": "g"}, {"name": "salsa de tomate natural", "qty": 350.0, "unit": "g"}, {"name": "zucchini", "qty": 280.0, "unit": "g"}, {"name": "queso parmesano", "qty": 28.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 540, "protein": 38.0, "carbs": 37.0, "fat": 23.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 513, "protein": 36.1, "carbs": 35.1, "fat": 21.8, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 837, "protein": 58.9, "carbs": 57.4, "fat": 35.6, "fiber": 9.3}, "hija": {"present": false}}}, "cena": {"name": "Tortitas de garbanzo con ensalada", "category": "Cena", "macros": {"cal": 400, "protein": 18, "carbs": 31, "fat": 17, "fiber": 8}, "micros": ["folato", "hierro", "calcio", "vitamina C"], "ingredients": [{"name": "garbanzos cocidos", "qty": 448.0, "unit": "g"}, {"name": "huevo", "qty": 3.0, "unit": "unidad"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}, {"name": "lechuga", "qty": 192.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 96.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 380, "protein": 17.1, "carbs": 29.4, "fat": 16.1, "fiber": 7.6}, "tio": {"present": true, "multiplier": 0.9, "cal": 360, "protein": 16.2, "carbs": 27.9, "fat": 15.3, "fiber": 7.2}, "yo": {"present": true, "multiplier": 1.35, "cal": 540, "protein": 24.3, "carbs": 41.9, "fat": 23.0, "fiber": 10.8}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Viernes", "week": 3, "day": "Viernes", "daynum": 19, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Ensalada tibia de pollo, papa y huevo", "category": "Almuerzo", "macros": {"cal": 510, "protein": 35, "carbs": 32, "fat": 22, "fiber": 6}, "micros": ["colina", "potasio", "vitamina K", "niacina"], "ingredients": [{"name": "pechuga de pollo", "qty": 425.0, "unit": "g"}, {"name": "papa", "qty": 637.5, "unit": "g"}, {"name": "huevo", "qty": 4.0, "unit": "unidad"}, {"name": "lechuga", "qty": 255.0, "unit": "g"}, {"name": "vainicas", "qty": 340.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 510, "protein": 35.0, "carbs": 32.0, "fat": 22.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 484, "protein": 33.2, "carbs": 30.4, "fat": 20.9, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 790, "protein": 54.2, "carbs": 49.6, "fat": 34.1, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 382, "protein": 26.2, "carbs": 24.0, "fat": 16.5, "fiber": 4.5}}}, "cena": {"name": "Sardinas con ensalada de tomate y pepino", "category": "Cena", "macros": {"cal": 395, "protein": 28, "carbs": 10, "fat": 24, "fiber": 4}, "micros": ["omega-3", "calcio", "vitamina D", "potasio"], "ingredients": [{"name": "sardinas en agua", "qty": 352.0, "unit": "g"}, {"name": "tomate", "qty": 288.0, "unit": "g"}, {"name": "pepino", "qty": 288.0, "unit": "g"}, {"name": "lechuga", "qty": 160.0, "unit": "g"}, {"name": "aguacate", "qty": 128.0, "unit": "g"}, {"name": "limon", "qty": 32.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 375, "protein": 26.6, "carbs": 9.5, "fat": 22.8, "fiber": 3.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 356, "protein": 25.2, "carbs": 9.0, "fat": 21.6, "fiber": 3.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 533, "protein": 37.8, "carbs": 13.5, "fat": 32.4, "fiber": 5.4}, "hija": {"present": false}}}}}, {"title": "Semana 3 - Sábado", "week": 3, "day": "Sábado", "daynum": 20, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "claras de huevo", "qty": 8.5, "unit": "unidad"}, {"name": "espinaca", "qty": 166.0, "unit": "g"}, {"name": "tomate", "qty": 249.0, "unit": "g"}, {"name": "cebolla", "qty": 83.0, "unit": "g"}, {"name": "pan integral", "qty": 8.5, "unit": "rebanada"}, {"name": "aguacate", "qty": 207.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 20.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 18.0, "carbs": 19.5, "fat": 15.0, "fiber": 5.2}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 237.0, "unit": "g"}, {"name": "zanahoria", "qty": 316.0, "unit": "g"}, {"name": "pepino", "qty": 395.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": true, "multiplier": 0.65, "cal": 143, "protein": 5.2, "carbs": 14.3, "fat": 7.2, "fiber": 4.5}}}, "almuerzo": {"name": "Gallo pinto ligero con huevo y aguacate", "category": "Almuerzo", "macros": {"cal": 500, "protein": 23, "carbs": 37, "fat": 25, "fiber": 10}, "micros": ["folato", "hierro", "potasio", "colina"], "ingredients": [{"name": "frijoles negros cocidos", "qty": 425.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 382.5, "unit": "g"}, {"name": "huevo", "qty": 8.5, "unit": "unidad"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "culantro", "qty": 34.0, "unit": "g"}, {"name": "cebolla", "qty": 85.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 500, "protein": 23.0, "carbs": 37.0, "fat": 25.0, "fiber": 10.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 475, "protein": 21.8, "carbs": 35.1, "fat": 23.8, "fiber": 9.5}, "yo": {"present": true, "multiplier": 1.55, "cal": 775, "protein": 35.6, "carbs": 57.4, "fat": 38.8, "fiber": 15.5}, "hija": {"present": true, "multiplier": 0.75, "cal": 375, "protein": 17.2, "carbs": 27.8, "fat": 18.8, "fiber": 7.5}}}, "cena": {"name": "Pollo con zucchini y champiñones", "category": "Cena", "macros": {"cal": 390, "protein": 34, "carbs": 11, "fat": 18, "fiber": 3}, "micros": ["selenio", "niacina", "potasio", "vitamina C"], "ingredients": [{"name": "pechuga de pollo", "qty": 474.0, "unit": "g"}, {"name": "zucchini", "qty": 395.0, "unit": "g"}, {"name": "hongos", "qty": 395.0, "unit": "g"}, {"name": "cebolla", "qty": 118.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 19.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 32.3, "carbs": 10.4, "fat": 17.1, "fiber": 2.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 351, "protein": 30.6, "carbs": 9.9, "fat": 16.2, "fiber": 2.7}, "yo": {"present": true, "multiplier": 1.35, "cal": 526, "protein": 45.9, "carbs": 14.9, "fat": 24.3, "fiber": 4.1}, "hija": {"present": true, "multiplier": 0.75, "cal": 292, "protein": 25.5, "carbs": 8.2, "fat": 13.5, "fiber": 2.2}}}}}, {"title": "Semana 3 - Domingo", "week": 3, "day": "Domingo", "daynum": 21, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 988, "unit": "ml"}, {"name": "banano", "qty": 316.0, "unit": "g"}, {"name": "avena", "qty": 98.8, "unit": "g"}, {"name": "mantequilla de mani", "qty": 59.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.65, "cal": 195, "protein": 10.4, "carbs": 21.4, "fat": 7.2, "fiber": 2.6}}}, "almuerzo": {"name": "Wrap de pollo con vegetales y hummus", "category": "Almuerzo", "macros": {"cal": 510, "protein": 34, "carbs": 38, "fat": 20, "fiber": 8}, "micros": ["folato", "vitamina C", "calcio", "hierro"], "ingredients": [{"name": "pechuga de pollo", "qty": 425.0, "unit": "g"}, {"name": "tortilla integral", "qty": 8.5, "unit": "unidad"}, {"name": "hummus", "qty": 170.0, "unit": "g"}, {"name": "lechuga", "qty": 212.5, "unit": "g"}, {"name": "tomate", "qty": 255.0, "unit": "g"}, {"name": "pepino", "qty": 212.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 510, "protein": 34.0, "carbs": 38.0, "fat": 20.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 484, "protein": 32.3, "carbs": 36.1, "fat": 19.0, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 790, "protein": 52.7, "carbs": 58.9, "fat": 31.0, "fiber": 12.4}, "hija": {"present": true, "multiplier": 0.75, "cal": 382, "protein": 25.5, "carbs": 28.5, "fat": 15.0, "fiber": 6.0}}}, "cena": {"name": "Pollo con ensalada de col y manzana", "category": "Cena", "macros": {"cal": 405, "protein": 31, "carbs": 18, "fat": 20, "fiber": 5}, "micros": ["vitamina C", "potasio", "vitamina A", "calcio"], "ingredients": [{"name": "pollo molido magro", "qty": 474.0, "unit": "g"}, {"name": "repollo", "qty": 474.0, "unit": "g"}, {"name": "manzana", "qty": 276.5, "unit": "g"}, {"name": "zanahoria", "qty": 158.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 118.5, "unit": "g"}, {"name": "aceite de oliva", "qty": 19.8, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 385, "protein": 29.4, "carbs": 17.1, "fat": 19.0, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 364, "protein": 27.9, "carbs": 16.2, "fat": 18.0, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 547, "protein": 41.9, "carbs": 24.3, "fat": 27.0, "fiber": 6.8}, "hija": {"present": true, "multiplier": 0.75, "cal": 304, "protein": 23.2, "carbs": 13.5, "fat": 15.0, "fiber": 3.8}}}}}, {"title": "Semana 4 - Lunes", "week": 4, "day": "Lunes", "daynum": 22, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Pollo teriyaki ligero con arroz y brócoli", "category": "Almuerzo", "macros": {"cal": 520, "protein": 40, "carbs": 39, "fat": 18, "fiber": 6}, "micros": ["vitamina C", "selenio", "manganeso", "folato"], "ingredients": [{"name": "pechuga de pollo", "qty": 531.2, "unit": "g"}, {"name": "arroz integral cocido", "qty": 467.5, "unit": "g"}, {"name": "brocoli", "qty": 510.0, "unit": "g"}, {"name": "salsa teriyaki baja en azucar", "qty": 63.8, "unit": "g"}, {"name": "ajonjoli", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 520, "protein": 40.0, "carbs": 39.0, "fat": 18.0, "fiber": 6.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 494, "protein": 38.0, "carbs": 37.0, "fat": 17.1, "fiber": 5.7}, "yo": {"present": true, "multiplier": 1.55, "cal": 806, "protein": 62.0, "carbs": 60.5, "fat": 27.9, "fiber": 9.3}, "hija": {"present": true, "multiplier": 0.75, "cal": 390, "protein": 30.0, "carbs": 29.2, "fat": 13.5, "fiber": 4.5}}}, "cena": {"name": "Caldo de res con verduras", "category": "Cena", "macros": {"cal": 400, "protein": 29, "carbs": 19, "fat": 18, "fiber": 4}, "micros": ["hierro", "zinc", "potasio", "vitamina A"], "ingredients": [{"name": "res magra", "qty": 352.0, "unit": "g"}, {"name": "chayote", "qty": 256.0, "unit": "g"}, {"name": "zanahoria", "qty": 192.0, "unit": "g"}, {"name": "apio", "qty": 96.0, "unit": "g"}, {"name": "papa", "qty": 256.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 380, "protein": 27.5, "carbs": 18.1, "fat": 17.1, "fiber": 3.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 360, "protein": 26.1, "carbs": 17.1, "fat": 16.2, "fiber": 3.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 540, "protein": 39.2, "carbs": 25.7, "fat": 24.3, "fiber": 5.4}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Martes", "week": 4, "day": "Martes", "daynum": 23, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Hamburguesa de pollo con ensalada y camote", "category": "Almuerzo", "macros": {"cal": 525, "protein": 38, "carbs": 34, "fat": 21, "fiber": 7}, "micros": ["potasio", "vitamina A", "zinc", "niacina"], "ingredients": [{"name": "pollo molido magro", "qty": 455.0, "unit": "g"}, {"name": "camote", "qty": 560.0, "unit": "g"}, {"name": "lechuga", "qty": 175.0, "unit": "g"}, {"name": "tomate", "qty": 210.0, "unit": "g"}, {"name": "cebolla", "qty": 105.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 105.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 525, "protein": 38.0, "carbs": 34.0, "fat": 21.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 499, "protein": 36.1, "carbs": 32.3, "fat": 19.9, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 814, "protein": 58.9, "carbs": 52.7, "fat": 32.6, "fiber": 10.8}, "hija": {"present": false}}}, "cena": {"name": "Pescado con puré de coliflor y ensalada", "category": "Cena", "macros": {"cal": 385, "protein": 32, "carbs": 14, "fat": 18, "fiber": 5}, "micros": ["yodo", "vitamina C", "folato", "potasio"], "ingredients": [{"name": "filete de pescado blanco", "qty": 448.0, "unit": "g"}, {"name": "coliflor", "qty": 640.0, "unit": "g"}, {"name": "lechuga", "qty": 160.0, "unit": "g"}, {"name": "tomate", "qty": 192.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 366, "protein": 30.4, "carbs": 13.3, "fat": 17.1, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 346, "protein": 28.8, "carbs": 12.6, "fat": 16.2, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 520, "protein": 43.2, "carbs": 18.9, "fat": 24.3, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Miércoles", "week": 4, "day": "Miércoles", "daynum": 24, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 988, "unit": "ml"}, {"name": "banano", "qty": 316.0, "unit": "g"}, {"name": "avena", "qty": 98.8, "unit": "g"}, {"name": "mantequilla de mani", "qty": 59.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": true, "multiplier": 0.65, "cal": 195, "protein": 10.4, "carbs": 21.4, "fat": 7.2, "fiber": 2.6}}}, "almuerzo": {"name": "Tazón de frijoles, huevo y plátano maduro asado", "category": "Almuerzo", "macros": {"cal": 540, "protein": 25, "carbs": 46, "fat": 23, "fiber": 9}, "micros": ["potasio", "calcio", "folato", "vitamina A"], "ingredients": [{"name": "frijoles negros cocidos", "qty": 420.0, "unit": "g"}, {"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "platano maduro horneado", "qty": 350.0, "unit": "g"}, {"name": "queso fresco bajo en grasa", "qty": 87.5, "unit": "g"}, {"name": "ensalada mixta", "qty": 280.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 540, "protein": 25.0, "carbs": 46.0, "fat": 23.0, "fiber": 9.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 513, "protein": 23.8, "carbs": 43.7, "fat": 21.8, "fiber": 8.5}, "yo": {"present": true, "multiplier": 1.55, "cal": 837, "protein": 38.8, "carbs": 71.3, "fat": 35.6, "fiber": 14.0}, "hija": {"present": false}}}, "cena": {"name": "Huevos rancheros ligeros", "category": "Cena", "macros": {"cal": 410, "protein": 21, "carbs": 24, "fat": 23, "fiber": 8}, "micros": ["folato", "colina", "potasio", "vitamina C"], "ingredients": [{"name": "huevo", "qty": 6.5, "unit": "unidad"}, {"name": "frijoles negros cocidos", "qty": 256.0, "unit": "g"}, {"name": "tortilla integral", "qty": 3.0, "unit": "unidad"}, {"name": "tomate", "qty": 256.0, "unit": "g"}, {"name": "cebolla", "qty": 64.0, "unit": "g"}, {"name": "aguacate", "qty": 96.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 390, "protein": 19.9, "carbs": 22.8, "fat": 21.8, "fiber": 7.6}, "tio": {"present": true, "multiplier": 0.9, "cal": 369, "protein": 18.9, "carbs": 21.6, "fat": 20.7, "fiber": 7.2}, "yo": {"present": true, "multiplier": 1.35, "cal": 554, "protein": 28.4, "carbs": 32.4, "fat": 31.1, "fiber": 10.8}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Jueves", "week": 4, "day": "Jueves", "daynum": 25, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 166.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 705.5, "unit": "g"}, {"name": "chia", "qty": 41.5, "unit": "g"}, {"name": "fruta fresca", "qty": 415.0, "unit": "g"}, {"name": "canela", "qty": 4.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": true, "multiplier": 0.75, "cal": 270, "protein": 18.0, "carbs": 30.8, "fat": 7.5, "fiber": 6.0}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 671.5, "unit": "g"}, {"name": "nueces", "qty": 59.2, "unit": "g"}, {"name": "frutos rojos", "qty": 276.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": true, "multiplier": 0.65, "cal": 162, "protein": 12.3, "carbs": 9.8, "fat": 7.8, "fiber": 2.0}}}, "almuerzo": {"name": "Sardinas con arroz integral y ensalada", "category": "Almuerzo", "macros": {"cal": 500, "protein": 34, "carbs": 33, "fat": 22, "fiber": 5}, "micros": ["omega-3", "calcio", "vitamina D", "selenio"], "ingredients": [{"name": "sardinas en agua", "qty": 385.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 350.0, "unit": "g"}, {"name": "lechuga", "qty": 175.0, "unit": "g"}, {"name": "tomate", "qty": 245.0, "unit": "g"}, {"name": "pepino", "qty": 245.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 500, "protein": 34.0, "carbs": 33.0, "fat": 22.0, "fiber": 5.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 475, "protein": 32.3, "carbs": 31.3, "fat": 20.9, "fiber": 4.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 775, "protein": 52.7, "carbs": 51.1, "fat": 34.1, "fiber": 7.8}, "hija": {"present": false}}}, "cena": {"name": "Pollo en salsa de tomate con berenjena", "category": "Cena", "macros": {"cal": 395, "protein": 34, "carbs": 14, "fat": 18, "fiber": 5}, "micros": ["niacina", "licopeno", "potasio", "vitamina C"], "ingredients": [{"name": "pechuga de pollo", "qty": 384.0, "unit": "g"}, {"name": "berenjena", "qty": 384.0, "unit": "g"}, {"name": "tomate triturado", "qty": 320.0, "unit": "g"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 375, "protein": 32.3, "carbs": 13.3, "fat": 17.1, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 356, "protein": 30.6, "carbs": 12.6, "fat": 16.2, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 533, "protein": 45.9, "carbs": 18.9, "fat": 24.3, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Viernes", "week": 4, "day": "Viernes", "daynum": 26, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Hummus con palitos de zanahoria y pepino", "category": "Brunch", "macros": {"cal": 220, "protein": 8, "carbs": 22, "fat": 11, "fiber": 7}, "micros": ["folato", "hierro", "vitamina A", "potasio"], "ingredients": [{"name": "hummus", "qty": 198.0, "unit": "g"}, {"name": "zanahoria", "qty": 264.0, "unit": "g"}, {"name": "pepino", "qty": 330.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 220, "protein": 8.0, "carbs": 22.0, "fat": 11.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 209, "protein": 7.6, "carbs": 20.9, "fat": 10.4, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.35, "cal": 297, "protein": 10.8, "carbs": 29.7, "fat": 14.9, "fiber": 9.5}, "hija": {"present": false}}}, "almuerzo": {"name": "Pollo con puré de camote y repollo salteado", "category": "Almuerzo", "macros": {"cal": 510, "protein": 40, "carbs": 35, "fat": 18, "fiber": 7}, "micros": ["vitamina A", "vitamina C", "niacina", "potasio"], "ingredients": [{"name": "pechuga de pollo", "qty": 552.5, "unit": "g"}, {"name": "camote", "qty": 722.5, "unit": "g"}, {"name": "repollo", "qty": 425.0, "unit": "g"}, {"name": "zanahoria", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 21.2, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 510, "protein": 40.0, "carbs": 35.0, "fat": 18.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 484, "protein": 38.0, "carbs": 33.2, "fat": 17.1, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 790, "protein": 62.0, "carbs": 54.2, "fat": 27.9, "fiber": 10.8}, "hija": {"present": true, "multiplier": 0.75, "cal": 382, "protein": 30.0, "carbs": 26.2, "fat": 13.5, "fiber": 5.2}}}, "cena": {"name": "Ensalada de camarón con aguacate", "category": "Cena", "macros": {"cal": 390, "protein": 28, "carbs": 12, "fat": 22, "fiber": 5}, "micros": ["selenio", "yodo", "vitamina E", "potasio"], "ingredients": [{"name": "camaron", "qty": 416.0, "unit": "g"}, {"name": "lechuga", "qty": 192.0, "unit": "g"}, {"name": "pepino", "qty": 224.0, "unit": "g"}, {"name": "tomate", "qty": 224.0, "unit": "g"}, {"name": "aguacate", "qty": 160.0, "unit": "g"}, {"name": "limon", "qty": 32.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 26.6, "carbs": 11.4, "fat": 20.9, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 351, "protein": 25.2, "carbs": 10.8, "fat": 19.8, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 526, "protein": 37.8, "carbs": 16.2, "fat": 29.7, "fiber": 6.8}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Sábado", "week": 4, "day": "Sábado", "daynum": 27, "meals": {"desayuno": {"name": "Avena proteica con yogurt, chía y fruta", "category": "Desayuno", "macros": {"cal": 360, "protein": 24, "carbs": 41, "fat": 10, "fiber": 8}, "micros": ["calcio", "potasio", "magnesio", "omega-3 (chía)", "vitamina C"], "ingredients": [{"name": "avena", "qty": 136.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 578.0, "unit": "g"}, {"name": "chia", "qty": 34.0, "unit": "g"}, {"name": "fruta fresca", "qty": 340.0, "unit": "g"}, {"name": "canela", "qty": 3.4, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 360, "protein": 24.0, "carbs": 41.0, "fat": 10.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 342, "protein": 22.8, "carbs": 38.9, "fat": 9.5, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 522, "protein": 34.8, "carbs": 59.4, "fat": 14.5, "fiber": 11.6}, "hija": {"present": false}}}, "brunch": {"name": "Batido de leche, banano, avena y mantequilla de maní", "category": "Brunch", "macros": {"cal": 300, "protein": 16, "carbs": 33, "fat": 11, "fiber": 4}, "micros": ["calcio", "potasio", "vitamina B6", "magnesio"], "ingredients": [{"name": "leche descremada", "qty": 825, "unit": "ml"}, {"name": "banano", "qty": 264.0, "unit": "g"}, {"name": "avena", "qty": 82.5, "unit": "g"}, {"name": "mantequilla de mani", "qty": 49.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 300, "protein": 16.0, "carbs": 33.0, "fat": 11.0, "fiber": 4.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 285, "protein": 15.2, "carbs": 31.3, "fat": 10.4, "fiber": 3.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 405, "protein": 21.6, "carbs": 44.6, "fat": 14.9, "fiber": 5.4}, "hija": {"present": false}}}, "almuerzo": {"name": "Arroz con camarón y vegetales", "category": "Almuerzo", "macros": {"cal": 520, "protein": 36, "carbs": 37, "fat": 19, "fiber": 5}, "micros": ["selenio", "yodo", "colina", "vitamina A"], "ingredients": [{"name": "camaron", "qty": 490.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 385.0, "unit": "g"}, {"name": "zanahoria", "qty": 175.0, "unit": "g"}, {"name": "chicharos", "qty": 175.0, "unit": "g"}, {"name": "huevo", "qty": 3.5, "unit": "unidad"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 520, "protein": 36.0, "carbs": 37.0, "fat": 19.0, "fiber": 5.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 494, "protein": 34.2, "carbs": 35.1, "fat": 18.1, "fiber": 4.8}, "yo": {"present": true, "multiplier": 1.55, "cal": 806, "protein": 55.8, "carbs": 57.4, "fat": 29.4, "fiber": 7.8}, "hija": {"present": false}}}, "cena": {"name": "Sopa de frijol con huevo cocido", "category": "Cena", "macros": {"cal": 395, "protein": 19, "carbs": 31, "fat": 17, "fiber": 10}, "micros": ["folato", "hierro", "potasio", "colina"], "ingredients": [{"name": "frijoles negros cocidos", "qty": 544.0, "unit": "g"}, {"name": "huevo", "qty": 3.0, "unit": "unidad"}, {"name": "cebolla", "qty": 96.0, "unit": "g"}, {"name": "chile dulce", "qty": 128.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}, {"name": "aceite de oliva", "qty": 16.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 375, "protein": 18.1, "carbs": 29.4, "fat": 16.1, "fiber": 9.5}, "tio": {"present": true, "multiplier": 0.9, "cal": 356, "protein": 17.1, "carbs": 27.9, "fat": 15.3, "fiber": 9.0}, "yo": {"present": true, "multiplier": 1.35, "cal": 533, "protein": 25.7, "carbs": 41.9, "fat": 23.0, "fiber": 13.5}, "hija": {"present": false}}}}}, {"title": "Semana 4 - Domingo", "week": 4, "day": "Domingo", "daynum": 28, "meals": {"desayuno": {"name": "Omelette de espinaca con tostada integral y aguacate", "category": "Desayuno", "macros": {"cal": 390, "protein": 24, "carbs": 26, "fat": 20, "fiber": 7}, "micros": ["hierro", "folato", "vitamina A", "vitamina E", "potasio"], "ingredients": [{"name": "huevo", "qty": 7.0, "unit": "unidad"}, {"name": "claras de huevo", "qty": 7.0, "unit": "unidad"}, {"name": "espinaca", "qty": 136.0, "unit": "g"}, {"name": "tomate", "qty": 204.0, "unit": "g"}, {"name": "cebolla", "qty": 68.0, "unit": "g"}, {"name": "pan integral", "qty": 7.0, "unit": "rebanada"}, {"name": "aguacate", "qty": 170.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 390, "protein": 24.0, "carbs": 26.0, "fat": 20.0, "fiber": 7.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 22.8, "carbs": 24.7, "fat": 19.0, "fiber": 6.6}, "yo": {"present": true, "multiplier": 1.45, "cal": 566, "protein": 34.8, "carbs": 37.7, "fat": 29.0, "fiber": 10.2}, "hija": {"present": false}}}, "brunch": {"name": "Yogurt griego con nueces y frutos rojos", "category": "Brunch", "macros": {"cal": 250, "protein": 19, "carbs": 15, "fat": 12, "fiber": 3}, "micros": ["calcio", "antioxidantes", "vitamina C", "magnesio"], "ingredients": [{"name": "yogurt griego natural", "qty": 561.0, "unit": "g"}, {"name": "nueces", "qty": 49.5, "unit": "g"}, {"name": "frutos rojos", "qty": 231.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 250, "protein": 19.0, "carbs": 15.0, "fat": 12.0, "fiber": 3.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 238, "protein": 18.1, "carbs": 14.2, "fat": 11.4, "fiber": 2.8}, "yo": {"present": true, "multiplier": 1.35, "cal": 338, "protein": 25.7, "carbs": 20.2, "fat": 16.2, "fiber": 4.1}, "hija": {"present": false}}}, "almuerzo": {"name": "Ensalada de garbanzos, atún y huevo", "category": "Almuerzo", "macros": {"cal": 510, "protein": 35, "carbs": 30, "fat": 22, "fiber": 8}, "micros": ["folato", "selenio", "hierro", "colina"], "ingredients": [{"name": "garbanzos cocidos", "qty": 385.0, "unit": "g"}, {"name": "atun en agua escurrido", "qty": 350.0, "unit": "g"}, {"name": "huevo", "qty": 3.5, "unit": "unidad"}, {"name": "lechuga", "qty": 210.0, "unit": "g"}, {"name": "tomate", "qty": 245.0, "unit": "g"}, {"name": "pepino", "qty": 210.0, "unit": "g"}, {"name": "aceite de oliva", "qty": 17.5, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 1.0, "cal": 510, "protein": 35.0, "carbs": 30.0, "fat": 22.0, "fiber": 8.0}, "tio": {"present": true, "multiplier": 0.95, "cal": 484, "protein": 33.2, "carbs": 28.5, "fat": 20.9, "fiber": 7.6}, "yo": {"present": true, "multiplier": 1.55, "cal": 790, "protein": 54.2, "carbs": 46.5, "fat": 34.1, "fiber": 12.4}, "hija": {"present": false}}}, "cena": {"name": "Rollitos de lechuga con atún", "category": "Cena", "macros": {"cal": 390, "protein": 30, "carbs": 11, "fat": 22, "fiber": 5}, "micros": ["selenio", "omega-3", "vitamina A", "potasio"], "ingredients": [{"name": "atun en agua escurrido", "qty": 352.0, "unit": "g"}, {"name": "lechuga", "qty": 320.0, "unit": "g"}, {"name": "zanahoria", "qty": 160.0, "unit": "g"}, {"name": "pepino", "qty": 192.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 96.0, "unit": "g"}, {"name": "aguacate", "qty": 128.0, "unit": "g"}], "portions": {"tia": {"present": true, "multiplier": 0.95, "cal": 370, "protein": 28.5, "carbs": 10.4, "fat": 20.9, "fiber": 4.8}, "tio": {"present": true, "multiplier": 0.9, "cal": 351, "protein": 27.0, "carbs": 9.9, "fat": 19.8, "fiber": 4.5}, "yo": {"present": true, "multiplier": 1.35, "cal": 526, "protein": 40.5, "carbs": 14.9, "fat": 29.7, "fiber": 6.8}, "hija": {"present": false}}}}}];
+const shoppingTotal = [{"name": "aceite de oliva", "qty": 832.7, "unit": "g"}, {"name": "aceitunas", "qty": 134.0, "unit": "g"}, {"name": "aguacate", "qty": 4075.0, "unit": "g"}, {"name": "ajo", "qty": 62.8, "unit": "g"}, {"name": "ajonjoli", "qty": 29.8, "unit": "g"}, {"name": "apio", "qty": 746.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 3660.0, "unit": "g"}, {"name": "atun en agua escurrido", "qty": 2042.0, "unit": "g"}, {"name": "avena", "qty": 2993.0, "unit": "g"}, {"name": "banano", "qty": 2636.0, "unit": "g"}, {"name": "berenjena", "qty": 704.0, "unit": "g"}, {"name": "brocoli", "qty": 2766.0, "unit": "g"}, {"name": "calabaza", "qty": 576.0, "unit": "g"}, {"name": "camaron", "qty": 906.0, "unit": "g"}, {"name": "camote", "qty": 1912.5, "unit": "g"}, {"name": "canela", "qty": 52.4, "unit": "g"}, {"name": "cebolla", "qty": 3227.0, "unit": "g"}, {"name": "cebolla morada", "qty": 128.0, "unit": "g"}, {"name": "chayote", "qty": 256.0, "unit": "g"}, {"name": "chia", "qty": 521.0, "unit": "g"}, {"name": "chicharos", "qty": 175.0, "unit": "g"}, {"name": "chile dulce", "qty": 1287.0, "unit": "g"}, {"name": "claras de huevo", "qty": 121.5, "unit": "unidad"}, {"name": "coliflor", "qty": 2151.0, "unit": "g"}, {"name": "couscous integral cocido", "qty": 420.0, "unit": "g"}, {"name": "culantro", "qty": 197.0, "unit": "g"}, {"name": "curry en polvo", "qty": 12.8, "unit": "g"}, {"name": "ensalada mixta", "qty": 630.0, "unit": "g"}, {"name": "esparragos", "qty": 420.0, "unit": "g"}, {"name": "espinaca", "qty": 2582.0, "unit": "g"}, {"name": "filete de pescado blanco", "qty": 2397.0, "unit": "g"}, {"name": "frijol rojo cocido", "qty": 420.0, "unit": "g"}, {"name": "frijoles negros cocidos", "qty": 2283.0, "unit": "g"}, {"name": "frijoles rojos cocidos", "qty": 320.0, "unit": "g"}, {"name": "frijoles tiernos cocidos", "qty": 420.0, "unit": "g"}, {"name": "fruta fresca", "qty": 5210.0, "unit": "g"}, {"name": "frutos rojos", "qty": 2492.0, "unit": "g"}, {"name": "galletas integrales", "qty": 13.0, "unit": "unidad"}, {"name": "garbanzos cocidos", "qty": 1509.0, "unit": "g"}, {"name": "hongos", "qty": 683.0, "unit": "g"}, {"name": "huevo", "qty": 179.5, "unit": "unidad"}, {"name": "hummus", "qty": 2069.0, "unit": "g"}, {"name": "leche de coco light", "qty": 212.0, "unit": "ml"}, {"name": "leche descremada", "qty": 8624.0, "unit": "ml"}, {"name": "lechuga", "qty": 3974.0, "unit": "g"}, {"name": "lentejas cocidas", "qty": 1341.0, "unit": "g"}, {"name": "limon", "qty": 408.5, "unit": "g"}, {"name": "maiz", "qty": 140.0, "unit": "g"}, {"name": "mantequilla de mani", "qty": 494.0, "unit": "g"}, {"name": "manzana", "qty": 276.5, "unit": "g"}, {"name": "nueces", "qty": 533.8, "unit": "g"}, {"name": "pan integral", "qty": 113.5, "unit": "rebanada"}, {"name": "papa", "qty": 1962.5, "unit": "g"}, {"name": "pasta integral cocida", "qty": 895.0, "unit": "g"}, {"name": "pechuga de pollo", "qty": 7422.9, "unit": "g"}, {"name": "pepino", "qty": 6230.5, "unit": "g"}, {"name": "pescado azul economico", "qty": 839.0, "unit": "g"}, {"name": "platano maduro horneado", "qty": 350.0, "unit": "g"}, {"name": "pollo molido magro", "qty": 2831.0, "unit": "g"}, {"name": "queso bajo en grasa", "qty": 87.5, "unit": "g"}, {"name": "queso fresco bajo en grasa", "qty": 183.5, "unit": "g"}, {"name": "queso parmesano", "qty": 28.0, "unit": "g"}, {"name": "quinoa cocida", "qty": 1163.0, "unit": "g"}, {"name": "repollo", "qty": 1373.0, "unit": "g"}, {"name": "res magra", "qty": 1612.0, "unit": "g"}, {"name": "salsa de soya baja en sodio", "qty": 34.0, "unit": "g"}, {"name": "salsa de tomate natural", "qty": 350.0, "unit": "g"}, {"name": "salsa teriyaki baja en azucar", "qty": 63.8, "unit": "g"}, {"name": "sardinas en agua", "qty": 737.0, "unit": "g"}, {"name": "tofu firme", "qty": 1192.0, "unit": "g"}, {"name": "tomate", "qty": 8681.0, "unit": "g"}, {"name": "tomate triturado", "qty": 990.0, "unit": "g"}, {"name": "tortilla integral", "qty": 20.0, "unit": "unidad"}, {"name": "vainicas", "qty": 1060.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 15590.5, "unit": "g"}, {"name": "yuca cocida", "qty": 525.0, "unit": "g"}, {"name": "zanahoria", "qty": 5264.5, "unit": "g"}, {"name": "zucchini", "qty": 1467.0, "unit": "g"}];
+const shoppingWeeks = {"1": [{"name": "aceite de oliva", "qty": 243.4, "unit": "g"}, {"name": "aguacate", "qty": 1250.5, "unit": "g"}, {"name": "ajo", "qty": 17.0, "unit": "g"}, {"name": "apio", "qty": 426.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 790.0, "unit": "g"}, {"name": "atun en agua escurrido", "qty": 510.0, "unit": "g"}, {"name": "avena", "qty": 771.6, "unit": "g"}, {"name": "banano", "qty": 632.0, "unit": "g"}, {"name": "brocoli", "qty": 935.0, "unit": "g"}, {"name": "calabaza", "qty": 576.0, "unit": "g"}, {"name": "camote", "qty": 630.0, "unit": "g"}, {"name": "canela", "qty": 14.4, "unit": "g"}, {"name": "cebolla", "qty": 1209.0, "unit": "g"}, {"name": "chia", "qty": 143.5, "unit": "g"}, {"name": "chile dulce", "qty": 809.0, "unit": "g"}, {"name": "claras de huevo", "qty": 33.5, "unit": "unidad"}, {"name": "coliflor", "qty": 576.0, "unit": "g"}, {"name": "culantro", "qty": 35.0, "unit": "g"}, {"name": "espinaca", "qty": 626.0, "unit": "g"}, {"name": "filete de pescado blanco", "qty": 1043.0, "unit": "g"}, {"name": "frijoles negros cocidos", "qty": 350.0, "unit": "g"}, {"name": "fruta fresca", "qty": 1435.0, "unit": "g"}, {"name": "frutos rojos", "qty": 784.0, "unit": "g"}, {"name": "huevo", "qty": 42.0, "unit": "unidad"}, {"name": "hummus", "qty": 396.0, "unit": "g"}, {"name": "leche descremada", "qty": 1976.0, "unit": "ml"}, {"name": "lechuga", "qty": 1171.5, "unit": "g"}, {"name": "lentejas cocidas", "qty": 1341.0, "unit": "g"}, {"name": "limon", "qty": 164.0, "unit": "g"}, {"name": "mantequilla de mani", "qty": 118.4, "unit": "g"}, {"name": "nueces", "qty": 167.9, "unit": "g"}, {"name": "pan integral", "qty": 25.5, "unit": "rebanada"}, {"name": "papa", "qty": 474.0, "unit": "g"}, {"name": "pasta integral cocida", "qty": 510.0, "unit": "g"}, {"name": "pechuga de pollo", "qty": 1766.5, "unit": "g"}, {"name": "pepino", "qty": 1381.0, "unit": "g"}, {"name": "pescado azul economico", "qty": 384.0, "unit": "g"}, {"name": "pollo molido magro", "qty": 839.0, "unit": "g"}, {"name": "quinoa cocida", "qty": 743.0, "unit": "g"}, {"name": "repollo", "qty": 474.0, "unit": "g"}, {"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "tomate", "qty": 2180.0, "unit": "g"}, {"name": "tortilla integral", "qty": 8.5, "unit": "unidad"}, {"name": "yogurt griego natural", "qty": 4609.5, "unit": "g"}, {"name": "zanahoria", "qty": 1396.5, "unit": "g"}, {"name": "zucchini", "qty": 280.0, "unit": "g"}], "2": [{"name": "aceite de oliva", "qty": 188.2, "unit": "g"}, {"name": "aceitunas", "qty": 64.0, "unit": "g"}, {"name": "aguacate", "qty": 840.0, "unit": "g"}, {"name": "ajo", "qty": 33.0, "unit": "g"}, {"name": "ajonjoli", "qty": 12.8, "unit": "g"}, {"name": "apio", "qty": 224.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 467.5, "unit": "g"}, {"name": "atun en agua escurrido", "qty": 830.0, "unit": "g"}, {"name": "avena", "qty": 718.0, "unit": "g"}, {"name": "banano", "qty": 528.0, "unit": "g"}, {"name": "berenjena", "qty": 320.0, "unit": "g"}, {"name": "brocoli", "qty": 320.0, "unit": "g"}, {"name": "canela", "qty": 11.8, "unit": "g"}, {"name": "cebolla", "qty": 740.5, "unit": "g"}, {"name": "chia", "qty": 117.0, "unit": "g"}, {"name": "chile dulce", "qty": 350.0, "unit": "g"}, {"name": "claras de huevo", "qty": 34.5, "unit": "unidad"}, {"name": "coliflor", "qty": 935.0, "unit": "g"}, {"name": "culantro", "qty": 25.6, "unit": "g"}, {"name": "curry en polvo", "qty": 12.8, "unit": "g"}, {"name": "esparragos", "qty": 420.0, "unit": "g"}, {"name": "espinaca", "qty": 914.0, "unit": "g"}, {"name": "frijol rojo cocido", "qty": 420.0, "unit": "g"}, {"name": "frijoles rojos cocidos", "qty": 320.0, "unit": "g"}, {"name": "fruta fresca", "qty": 1170.0, "unit": "g"}, {"name": "frutos rojos", "qty": 507.5, "unit": "g"}, {"name": "garbanzos cocidos", "qty": 676.0, "unit": "g"}, {"name": "hongos", "qty": 288.0, "unit": "g"}, {"name": "huevo", "qty": 38.5, "unit": "unidad"}, {"name": "hummus", "qty": 633.0, "unit": "g"}, {"name": "leche de coco light", "qty": 212.0, "unit": "ml"}, {"name": "leche descremada", "qty": 1650.0, "unit": "ml"}, {"name": "lechuga", "qty": 559.0, "unit": "g"}, {"name": "limon", "qty": 84.5, "unit": "g"}, {"name": "maiz", "qty": 140.0, "unit": "g"}, {"name": "mantequilla de mani", "qty": 99.0, "unit": "g"}, {"name": "nueces", "qty": 108.7, "unit": "g"}, {"name": "pan integral", "qty": 34.5, "unit": "rebanada"}, {"name": "papa", "qty": 595.0, "unit": "g"}, {"name": "pechuga de pollo", "qty": 2427.2, "unit": "g"}, {"name": "pepino", "qty": 1559.0, "unit": "g"}, {"name": "pescado azul economico", "qty": 455.0, "unit": "g"}, {"name": "pollo molido magro", "qty": 743.0, "unit": "g"}, {"name": "queso bajo en grasa", "qty": 87.5, "unit": "g"}, {"name": "queso fresco bajo en grasa", "qty": 96.0, "unit": "g"}, {"name": "quinoa cocida", "qty": 420.0, "unit": "g"}, {"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "tofu firme", "qty": 512.0, "unit": "g"}, {"name": "tomate", "qty": 2170.0, "unit": "g"}, {"name": "tomate triturado", "qty": 670.0, "unit": "g"}, {"name": "vainicas", "qty": 720.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 3221.5, "unit": "g"}, {"name": "yuca cocida", "qty": 525.0, "unit": "g"}, {"name": "zanahoria", "qty": 1598.0, "unit": "g"}, {"name": "zucchini", "qty": 512.0, "unit": "g"}], "3": [{"name": "aceite de oliva", "qty": 211.4, "unit": "g"}, {"name": "aceitunas", "qty": 70.0, "unit": "g"}, {"name": "aguacate", "qty": 920.5, "unit": "g"}, {"name": "ajo", "qty": 12.8, "unit": "g"}, {"name": "arroz integral cocido", "qty": 1200.0, "unit": "g"}, {"name": "avena", "qty": 854.1, "unit": "g"}, {"name": "banano", "qty": 896.0, "unit": "g"}, {"name": "brocoli", "qty": 1001.0, "unit": "g"}, {"name": "canela", "qty": 14.4, "unit": "g"}, {"name": "cebolla", "qty": 644.5, "unit": "g"}, {"name": "cebolla morada", "qty": 128.0, "unit": "g"}, {"name": "chia", "qty": 143.5, "unit": "g"}, {"name": "claras de huevo", "qty": 25.5, "unit": "unidad"}, {"name": "couscous integral cocido", "qty": 420.0, "unit": "g"}, {"name": "culantro", "qty": 85.2, "unit": "g"}, {"name": "ensalada mixta", "qty": 350.0, "unit": "g"}, {"name": "espinaca", "qty": 498.0, "unit": "g"}, {"name": "filete de pescado blanco", "qty": 906.0, "unit": "g"}, {"name": "frijoles negros cocidos", "qty": 713.0, "unit": "g"}, {"name": "frijoles tiernos cocidos", "qty": 420.0, "unit": "g"}, {"name": "fruta fresca", "qty": 1435.0, "unit": "g"}, {"name": "frutos rojos", "qty": 462.0, "unit": "g"}, {"name": "galletas integrales", "qty": 13.0, "unit": "unidad"}, {"name": "garbanzos cocidos", "qty": 448.0, "unit": "g"}, {"name": "hongos", "qty": 395.0, "unit": "g"}, {"name": "huevo", "qty": 47.5, "unit": "unidad"}, {"name": "hummus", "qty": 644.0, "unit": "g"}, {"name": "leche descremada", "qty": 3185.0, "unit": "ml"}, {"name": "lechuga", "qty": 1011.5, "unit": "g"}, {"name": "limon", "qty": 128.0, "unit": "g"}, {"name": "mantequilla de mani", "qty": 167.9, "unit": "g"}, {"name": "manzana", "qty": 276.5, "unit": "g"}, {"name": "nueces", "qty": 99.0, "unit": "g"}, {"name": "pan integral", "qty": 25.5, "unit": "rebanada"}, {"name": "papa", "qty": 637.5, "unit": "g"}, {"name": "pasta integral cocida", "qty": 385.0, "unit": "g"}, {"name": "pechuga de pollo", "qty": 1761.5, "unit": "g"}, {"name": "pepino", "qty": 1759.5, "unit": "g"}, {"name": "pollo molido magro", "qty": 794.0, "unit": "g"}, {"name": "queso parmesano", "qty": 28.0, "unit": "g"}, {"name": "repollo", "qty": 474.0, "unit": "g"}, {"name": "res magra", "qty": 420.0, "unit": "g"}, {"name": "salsa de soya baja en sodio", "qty": 34.0, "unit": "g"}, {"name": "salsa de tomate natural", "qty": 350.0, "unit": "g"}, {"name": "sardinas en agua", "qty": 352.0, "unit": "g"}, {"name": "tofu firme", "qty": 680.0, "unit": "g"}, {"name": "tomate", "qty": 2143.0, "unit": "g"}, {"name": "tortilla integral", "qty": 8.5, "unit": "unidad"}, {"name": "vainicas", "qty": 340.0, "unit": "g"}, {"name": "yogurt griego natural", "qty": 3776.0, "unit": "g"}, {"name": "zanahoria", "qty": 1045.0, "unit": "g"}, {"name": "zucchini", "qty": 675.0, "unit": "g"}], "4": [{"name": "aceite de oliva", "qty": 189.7, "unit": "g"}, {"name": "aguacate", "qty": 1064.0, "unit": "g"}, {"name": "ajonjoli", "qty": 17.0, "unit": "g"}, {"name": "apio", "qty": 96.0, "unit": "g"}, {"name": "arroz integral cocido", "qty": 1202.5, "unit": "g"}, {"name": "atun en agua escurrido", "qty": 702.0, "unit": "g"}, {"name": "avena", "qty": 649.3, "unit": "g"}, {"name": "banano", "qty": 580.0, "unit": "g"}, {"name": "berenjena", "qty": 384.0, "unit": "g"}, {"name": "brocoli", "qty": 510.0, "unit": "g"}, {"name": "camaron", "qty": 906.0, "unit": "g"}, {"name": "camote", "qty": 1282.5, "unit": "g"}, {"name": "canela", "qty": 11.8, "unit": "g"}, {"name": "cebolla", "qty": 633.0, "unit": "g"}, {"name": "chayote", "qty": 256.0, "unit": "g"}, {"name": "chia", "qty": 117.0, "unit": "g"}, {"name": "chicharos", "qty": 175.0, "unit": "g"}, {"name": "chile dulce", "qty": 128.0, "unit": "g"}, {"name": "claras de huevo", "qty": 28.0, "unit": "unidad"}, {"name": "coliflor", "qty": 640.0, "unit": "g"}, {"name": "culantro", "qty": 51.2, "unit": "g"}, {"name": "ensalada mixta", "qty": 280.0, "unit": "g"}, {"name": "espinaca", "qty": 544.0, "unit": "g"}, {"name": "filete de pescado blanco", "qty": 448.0, "unit": "g"}, {"name": "frijoles negros cocidos", "qty": 1220.0, "unit": "g"}, {"name": "fruta fresca", "qty": 1170.0, "unit": "g"}, {"name": "frutos rojos", "qty": 738.5, "unit": "g"}, {"name": "garbanzos cocidos", "qty": 385.0, "unit": "g"}, {"name": "huevo", "qty": 51.5, "unit": "unidad"}, {"name": "hummus", "qty": 396.0, "unit": "g"}, {"name": "leche descremada", "qty": 1813.0, "unit": "ml"}, {"name": "lechuga", "qty": 1232.0, "unit": "g"}, {"name": "limon", "qty": 32.0, "unit": "g"}, {"name": "mantequilla de mani", "qty": 108.7, "unit": "g"}, {"name": "nueces", "qty": 158.2, "unit": "g"}, {"name": "pan integral", "qty": 28.0, "unit": "rebanada"}, {"name": "papa", "qty": 256.0, "unit": "g"}, {"name": "pechuga de pollo", "qty": 1467.7, "unit": "g"}, {"name": "pepino", "qty": 1531.0, "unit": "g"}, {"name": "platano maduro horneado", "qty": 350.0, "unit": "g"}, {"name": "pollo molido magro", "qty": 455.0, "unit": "g"}, {"name": "queso fresco bajo en grasa", "qty": 87.5, "unit": "g"}, {"name": "repollo", "qty": 425.0, "unit": "g"}, {"name": "res magra", "qty": 352.0, "unit": "g"}, {"name": "salsa teriyaki baja en azucar", "qty": 63.8, "unit": "g"}, {"name": "sardinas en agua", "qty": 385.0, "unit": "g"}, {"name": "tomate", "qty": 2188.0, "unit": "g"}, {"name": "tomate triturado", "qty": 320.0, "unit": "g"}, {"name": "tortilla integral", "qty": 3.0, "unit": "unidad"}, {"name": "yogurt griego natural", "qty": 3983.5, "unit": "g"}, {"name": "zanahoria", "qty": 1225.0, "unit": "g"}]};
+
+const state = {
+  week: 1,
+  dayIndex: 0,
+  mealKey: 'desayuno',
+  dayModalOpen: false,
+  shoppingModalOpen: false,
+  search: '',
+  shoppingView: 'totales'
+};
+
+const weekTabs = document.getElementById('weekTabs');
+const dayGrid = document.getElementById('dayGrid');
+const mealButtons = document.getElementById('mealButtons');
+const mealDetail = document.getElementById('mealDetail');
+const shoppingSection = document.getElementById('shoppingSection');
+const shoppingTabs = document.getElementById('shoppingTabs');
+const dayOverlay = document.getElementById('dayOverlay');
+const shoppingOverlay = document.getElementById('shoppingOverlay');
+const dayModalTitle = document.getElementById('dayModalTitle');
+const dayModalText = document.getElementById('dayModalText');
+const searchInput = document.getElementById('searchInput');
+const configFileInput = document.getElementById('configFileInput');
+
+const monthlyFriendly = new Set([
+  'aceite de oliva','ajonjoli','atun en agua escurrido','avena','canela','chia','couscous integral cocido',
+  'curry en polvo','frijol rojo cocido','frijoles negros cocidos','frijoles rojos cocidos','frijoles tiernos cocidos',
+  'frutos rojos','galletas integrales','garbanzos cocidos','lentejas cocidas','maiz','mantequilla de mani',
+  'nueces','pasta integral cocida','quinoa cocida','arroz integral cocido','salsa de soya baja en sodio',
+  'salsa teriyaki baja en azucar','salsa de tomate natural','sardinas en agua','tomate triturado'
+]);
+
+const categoryMap = {
+  proteins: new Set(['atun en agua escurrido','camaron','claras de huevo','filete de pescado blanco','huevo','leche descremada',
+    'pescado azul economico','pollo molido magro','pechuga de pollo','queso bajo en grasa','queso fresco bajo en grasa',
+    'res magra','sardinas en agua','tofu firme','yogurt griego natural']),
+  carbsLegumes: new Set(['arroz integral cocido','avena','camote','couscous integral cocido','frijol rojo cocido',
+    'frijoles negros cocidos','frijoles rojos cocidos','frijoles tiernos cocidos','galletas integrales','garbanzos cocidos',
+    'hummus','lentejas cocidas','maiz','pasta integral cocida','pan integral','papa','platano maduro horneado',
+    'quinoa cocida','tortilla integral','yuca cocida']),
+  condiments: new Set(['aceite de oliva','ajo','ajonjoli','canela','curry en polvo','culantro','limon',
+    'mantequilla de mani','salsa de soya baja en sodio','salsa teriyaki baja en azucar','salsa de tomate natural',
+    'tomate triturado'])
+};
+
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function buildDefaultConfig() {
+  return {
+    version: 1,
+    familyNames: clone(FAMILY_NAME_DEFAULTS),
+    priceDB: clone(PRICE_DB_DEFAULTS)
+  };
+}
+
+function normalizeFamilyNames(raw) {
+  const merged = clone(FAMILY_NAME_DEFAULTS);
+  Object.keys(raw || {}).forEach(key => {
+    const value = String(raw[key] ?? '').trim();
+    if (value) merged[key] = value;
+  });
+  return merged;
+}
+
+function normalizePriceDB(raw) {
+  const merged = clone(PRICE_DB_DEFAULTS);
+  Object.keys(raw || {}).forEach(name => {
+    merged[name] = Object.assign({}, merged[name] || {}, raw[name]);
+  });
+  return merged;
+}
+
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem(CONFIG_STORAGE_KEY);
+    if (!raw) return buildDefaultConfig();
+    const parsed = JSON.parse(raw);
+    return {
+      version: Number(parsed.version) || 1,
+      familyNames: normalizeFamilyNames(parsed.familyNames || parsed.names),
+      priceDB: normalizePriceDB(parsed.priceDB || parsed.prices)
+    };
+  } catch (err) {
+    return buildDefaultConfig();
+  }
+}
+
+let appConfig = loadConfig();
+let familyNames = clone(appConfig.familyNames || FAMILY_NAME_DEFAULTS);
+let priceDB = clone(appConfig.priceDB || PRICE_DB_DEFAULTS);
+
+function currentConfigPayload() {
+  return {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    familyNames: clone(familyNames),
+    priceDB: clone(priceDB)
+  };
+}
+
+function saveConfig() {
+  localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(currentConfigPayload()));
+}
+
+function savePriceDB() {
+  saveConfig();
+}
+
+function saveFamilyNames() {
+  saveConfig();
+}
+
+function resetAppConfig() {
+  const defaults = buildDefaultConfig();
+  familyNames = defaults.familyNames;
+  priceDB = defaults.priceDB;
+  saveConfig();
+  renderDays();
+  if (state.dayModalOpen) renderDayModal();
+  renderShopping();
+}
+
+function resetPriceDB() {
+  priceDB = clone(PRICE_DB_DEFAULTS);
+  saveConfig();
+  renderShopping();
+}
+
+function exportConfigFile() {
+  const blob = new Blob([JSON.stringify(currentConfigPayload(), null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'menu-saludable-config.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function importConfigText(text) {
+  const parsed = JSON.parse(text);
+  familyNames = normalizeFamilyNames(parsed.familyNames || parsed.names);
+  priceDB = normalizePriceDB(parsed.priceDB || parsed.prices);
+  saveConfig();
+  renderDays();
+  if (state.dayModalOpen) renderDayModal();
+  renderShopping();
+}
+
+async function handleImportFile(file) {
+  if (!file) return;
+  try {
+    const text = await file.text();
+    await importConfigText(text);
+    alert('Configuración importada correctamente.');
+  } catch (err) {
+    console.error(err);
+    alert('No se pudo importar el archivo. Verifica que sea un JSON válido exportado por la página.');
+  }
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat('es-CR', { style:'currency', currency:'CRC', maximumFractionDigits:2 }).format(value || 0);
+}
+
+function slugify(text) {
+  return text.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function labelPerson(key) {
+  return familyNames[key] || FAMILY_NAME_DEFAULTS[key] || key;
+}
+
+function mealLabel(key) {
+  return { desayuno:'Desayuno', brunch:'Brunch', almuerzo:'Almuerzo', cena:'Cena' }[key];
+}
+
+function personNotes(person, mealKey) {
+  if (person === 'tio') return 'Mantener la porción indicada y evitar añadir carbohidratos extra fuera de la receta.';
+  if (person === 'tia') return mealKey === 'cena' ? 'Cena ligeramente contenida para sostener déficit suave.' : 'Porción estándar de pérdida de peso.';
+  if (person === 'yo') return 'Porción aumentada para favorecer recomposición corporal y soporte de masa muscular.';
+  if (person === 'hija') return 'Enfoque en saciedad y nutrientes, sin restricción agresiva.';
+  return '';
+}
+
+function weekDays(week) {
+  return calendarData.filter(d => d.week === week);
+}
+
+function currentDay() {
+  const arr = weekDays(state.week);
+  return arr[state.dayIndex] || arr[0];
+}
+
+function formatNumber(value) {
+  const rounded = Math.round(value * 100) / 100;
+  if (Number.isInteger(rounded)) return String(rounded);
+  if (Math.round(rounded * 10) / 10 === rounded) return rounded.toFixed(1);
+  return rounded.toFixed(2);
+}
+
+function formatQty(qty, unit) {
+  const value = Number(qty);
+  if (unit === 'g' && value >= 1000) return `${formatNumber(value / 1000)} kg`;
+  if (unit === 'ml' && value >= 1000) return `${formatNumber(value / 1000)} L`;
+  return `${formatNumber(value)} ${unit}`;
+}
+
+
+function getPriceRecord(name) {
+  const fallback = PRICE_DB_DEFAULTS[name] || { unitLabel: 'kg', factor: 1000, price: 0 };
+  const raw = priceDB[name] || fallback;
+  const unitLabel = String(raw.unitLabel ?? fallback.unitLabel ?? 'kg').trim() || (fallback.unitLabel || 'kg');
+  let factor = Number(raw.factor);
+  let price = Number(raw.price);
+  if (!Number.isFinite(factor) || factor <= 0) factor = Number(fallback.factor) || 1;
+  if (!Number.isFinite(price) || price < 0) price = 0;
+  return { unitLabel, factor, price };
+}
+
+function qtyToPurchaseUnits(qty, record) {
+  const amount = Number(qty);
+  const factor = Number(record && record.factor);
+  if (!Number.isFinite(amount) || amount <= 0) return 0;
+  if (!Number.isFinite(factor) || factor <= 0) return amount;
+  return amount / factor;
+}
+
+function itemEstimatedCost(item) {
+  const record = getPriceRecord(item.name);
+  return qtyToPurchaseUnits(item.qty, record) * record.price;
+}
+
+function calcCostTotal(items) {
+  return (items || []).reduce((sum, item) => sum + itemEstimatedCost(item), 0);
+}
+
+function pricedCoverage(items) {
+  const total = (items || []).length;
+  const ready = (items || []).reduce((count, item) => count + (getPriceRecord(item.name).price > 0 ? 1 : 0), 0);
+  return { total, ready, missing: Math.max(total - ready, 0) };
+}
+
+function getPresentPortions(meal) {
+  return ['tia','tio','yo','hija']
+    .map(person => ({ person, data: meal.portions[person] }))
+    .filter(entry => entry.data && entry.data.present);
+}
+
+function getPortionShare(meal, person) {
+  const present = getPresentPortions(meal);
+  const total = present.reduce((sum, entry) => sum + (Number(entry.data.multiplier) || 0), 0);
+  const current = meal.portions[person];
+  if (!current || !current.present || total <= 0) return 0;
+  return (Number(current.multiplier) || 0) / total;
+}
+
+function getPersonIngredientPortions(meal, person) {
+  const share = getPortionShare(meal, person);
+  return meal.ingredients.map(ingredient => ({
+    name: ingredient.name,
+    unit: ingredient.unit,
+    qty: ingredient.qty * share
+  }));
+}
+
+function groupByCategory(items) {
+  const groups = {
+    'Proteínas y lácteos': [],
+    'Carbohidratos y legumbres': [],
+    'Vegetales y frutas': [],
+    'Condimentos y otros': []
+  };
+  items.forEach(item => {
+    if (categoryMap.proteins.has(item.name)) groups['Proteínas y lácteos'].push(item);
+    else if (categoryMap.carbsLegumes.has(item.name)) groups['Carbohidratos y legumbres'].push(item);
+    else if (categoryMap.condiments.has(item.name)) groups['Condimentos y otros'].push(item);
+    else groups['Vegetales y frutas'].push(item);
+  });
+  Object.keys(groups).forEach(key => groups[key].sort((a,b)=> a.name.localeCompare(b.name)));
+  return groups;
+}
+
+function filterItems(items) {
+  const needle = state.search.trim().toLowerCase();
+  if (!needle) return items;
+  return items.filter(item => item.name.toLowerCase().includes(needle));
+}
+
+function renderItemGroups(groups) {
+  const sections = Object.entries(groups).map(([title, items]) => {
+    if (!items.length) return '';
+    return `
+      <div class="list-card">
+        <h4 class="section-title">${title}</h4>
+        <ul class="clean">
+          ${items.map(item => `
+            <li><span>${item.name}</span><strong>${formatQty(item.qty, item.unit)}</strong></li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+  }).filter(Boolean).join('');
+  return sections || '<div class="empty-state">No hay ingredientes que coincidan con el filtro en esta vista.</div>';
+}
+
+function renderWeekTabs() {
+  weekTabs.innerHTML = '';
+  [1,2,3,4].forEach(w => {
+    const btn = document.createElement('button');
+    btn.className = 'week-tab' + (state.week===w ? ' active' : '');
+    btn.textContent = 'Semana ' + w;
+    btn.onclick = () => { state.week = w; state.dayIndex = 0; renderWeekTabs(); renderDays(); };
+    weekTabs.appendChild(btn);
+  });
+}
+
+function renderDays() {
+  dayGrid.innerHTML = '';
+  weekDays(state.week).forEach((d, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-btn';
+    btn.innerHTML = `<span><strong>${d.day}</strong></span><span class="small">Día ${d.daynum}</span>`;
+    btn.onclick = () => openDayModal(idx);
+    dayGrid.appendChild(btn);
+  });
+}
+
+function renderMealButtons() {
+  mealButtons.innerHTML = '';
+  ['desayuno','brunch','almuerzo','cena'].forEach(key => {
+    const meal = currentDay().meals[key];
+    const btn = document.createElement('button');
+    btn.className = 'meal-btn' + (state.mealKey===key ? ' active' : '');
+    btn.innerHTML = `<strong>${mealLabel(key)}</strong><br><span class="small">${meal.name}</span>`;
+    btn.onclick = () => { state.mealKey = key; renderDayModal(); };
+    mealButtons.appendChild(btn);
+  });
+}
+
+function loadRecipeImage(recipeKey, mealName) {
+  const img = document.getElementById('recipeImage');
+  const placeholder = document.getElementById('recipePlaceholder');
+  if (!img || !placeholder) return;
+  let index = 0;
+  img.alt = mealName;
+  img.style.display = 'none';
+  placeholder.style.display = 'flex';
+
+  function tryNext() {
+    if (index >= IMAGE_EXTENSIONS.length) {
+      img.removeAttribute('src');
+      return;
+    }
+    const ext = IMAGE_EXTENSIONS[index++];
+    img.onerror = tryNext;
+    img.onload = () => {
+      placeholder.style.display = 'none';
+      img.style.display = 'block';
+    };
+    img.src = `${IMAGE_BASE_PATH}${recipeKey}.${ext}`;
+  }
+  tryNext();
+}
+
+function renderMealDetail() {
+  const day = currentDay();
+  const meal = day.meals[state.mealKey];
+  const m = meal.macros;
+  const recipeKey = slugify(meal.name);
+  const ingredientsHtml = meal.ingredients.map(i => `
+    <li><span>${i.name}</span><strong>${formatQty(i.qty, i.unit)}</strong></li>
+  `).join('');
+
+  const peopleHtml = ['tia','tio','yo','hija'].map(person => {
+    const p = meal.portions[person];
+    if (!p.present) {
+      return `
+        <div class="person absent">
+          <h4>${labelPerson(person)}</h4>
+          <p class="small" style="margin-top:6px;">No come este tiempo en casa ese día.</p>
+        </div>
+      `;
+    }
+    const servingList = getPersonIngredientPortions(meal, person).map(item => `
+      <li><span>${item.name}</span><strong>${formatQty(item.qty, item.unit)}</strong></li>
+    `).join('');
+    return `
+      <div class="person">
+        <h4>${labelPerson(person)}</h4>
+        <p class="small" style="margin-top:6px;">Cantidad exacta que le corresponde en este plato.</p>
+        <p class="small" style="margin-top:6px;">${personNotes(person, state.mealKey)}</p>
+        <div class="kpi-line">
+          <span class="tag">${p.cal} kcal</span>
+          <span class="tag">${p.protein} g proteína</span>
+          <span class="tag">${p.carbs} g carbos</span>
+          <span class="tag">${p.fat} g grasa</span>
+          <span class="tag">${p.fiber} g fibra</span>
+        </div>
+        <div class="portion-box">
+          <div class="portion-title">Servir aproximadamente:</div>
+          <ul class="clean compact">${servingList}</ul>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  mealDetail.innerHTML = `
+    <h3>${mealLabel(state.mealKey)} — ${meal.name}</h3>
+    <div class="metrics">
+      <div class="metric"><div class="small">Kcal base</div><strong>${m.cal}</strong></div>
+      <div class="metric"><div class="small">Proteína</div><strong>${m.protein} g</strong></div>
+      <div class="metric"><div class="small">Carbos</div><strong>${m.carbs} g</strong></div>
+      <div class="metric"><div class="small">Grasa</div><strong>${m.fat} g</strong></div>
+      <div class="metric"><div class="small">Fibra</div><strong>${m.fiber} g</strong></div>
+    </div>
+    <div class="kpi-line">${meal.micros.map(x => `<span class="tag">${x}</span>`).join('')}</div>
+    <div class="cols">
+      <div class="list-card">
+        <h4 class="section-title">Imagen de referencia</h4>
+        <div class="recipe-media">
+          <img class="recipe-image" id="recipeImage" alt="">
+          <div class="image-placeholder" id="recipePlaceholder">
+            <div class="placeholder-inner">
+              <strong>Espacio para imagen de la receta</strong>
+              <div class="small">Coloca la imagen dentro de la carpeta <code>${IMAGE_BASE_PATH}</code> con alguno de estos nombres:</div>
+              <div><code>${recipeKey}.jpg</code></div>
+              <div><code>${recipeKey}.png</code></div>
+              <div><code>${recipeKey}.webp</code></div>
+            </div>
+          </div>
+        </div>
+        <p class="helper">La página intentará leer primero <code>.jpg</code>, luego <code>.jpeg</code>, <code>.png</code> y <code>.webp</code>.</p>
+      </div>
+      <div class="list-card">
+        <h4 class="section-title">Ingredientes totales para ese día</h4>
+        <p class="small" style="margin-bottom:10px;">Cantidad total a cocinar para las personas que sí comen esta comida en casa ese día.</p>
+        <ul class="clean">${ingredientsHtml}</ul>
+      </div>
+    </div>
+    <div class="list-card" style="margin-top:16px;">
+      <h4 class="section-title">Porción por integrante</h4>
+      <div class="people">${peopleHtml}</div>
+    </div>
+  `;
+  loadRecipeImage(recipeKey, meal.name);
+}
+
+function renderDayModal() {
+  const day = currentDay();
+  dayModalTitle.textContent = day.title;
+  dayModalText.textContent = 'Selecciona uno de los 4 tiempos de comida para ver receta base, ingredientes totales del día, macros, micros y cantidades exactas por persona.';
+  renderMealButtons();
+  renderMealDetail();
+}
+
+function renderShoppingTabs() {
+  shoppingTabs.innerHTML = '';
+  [
+    ['totales', 'Totales del mes'],
+    ['semana-1', 'Semana 1'],
+    ['semana-2', 'Semana 2'],
+    ['semana-3', 'Semana 3'],
+    ['semana-4', 'Semana 4'],
+    ['costos', 'Costos']
+  ].forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'shopping-tab' + (state.shoppingView === key ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = () => { state.shoppingView = key; renderShoppingTabs(); renderShopping(); };
+    shoppingTabs.appendChild(btn);
+  });
+}
+
+function renderShoppingTotals() {
+  const filtered = filterItems(shoppingTotal);
+  const monthStart = filtered.filter(item => monthlyFriendly.has(item.name));
+  const weeklyBetter = filtered.filter(item => !monthlyFriendly.has(item.name));
+  return `
+    <div class="shopping-columns">
+      <div class="shopping-group">
+        <div class="list-card">
+          <h3>Conviene comprar al inicio del mes <span class="badge">despensa / enlatados / congelables</span></h3>
+          <p class="small" style="margin:8px 0 12px;">Estos ingredientes suelen tolerar mejor una compra grande si tienes espacio y buena conservación.</p>
+          ${renderItemGroups(groupByCategory(monthStart))}
+        </div>
+      </div>
+      <div class="shopping-group">
+        <div class="list-card">
+          <h3>Total mensual que conviene dividir por semana <span class="badge">más fresco</span></h3>
+          <p class="small" style="margin:8px 0 12px;">Úsalo como referencia del mes, pero es mejor repartirlo por semana para carne, lácteos, pan, huevos, frutas y vegetales.</p>
+          ${renderItemGroups(groupByCategory(weeklyBetter))}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderShoppingWeek(weekNumber) {
+  const items = filterItems(shoppingWeeks[String(weekNumber)] || shoppingWeeks[weekNumber] || []);
+  const fresh = items.filter(item => !monthlyFriendly.has(item.name));
+  const covered = items.filter(item => monthlyFriendly.has(item.name));
+  return `
+    <div class="shopping-columns">
+      <div class="shopping-group">
+        <div class="list-card">
+          <h3>Comprar fresco esta semana <span class="badge">semana ${weekNumber}</span></h3>
+          <p class="small" style="margin:8px 0 12px;">Aquí están los ingredientes que más sentido tiene comprar frescos para esta semana concreta.</p>
+          ${renderItemGroups(groupByCategory(fresh))}
+        </div>
+      </div>
+      <div class="shopping-group">
+        <div class="list-card">
+          <h3>Puedes cubrirlo desde la compra del mes <span class="badge">semana ${weekNumber}</span></h3>
+          <p class="small" style="margin:8px 0 12px;">Son ingredientes de despensa o más estables que puedes dejar resueltos desde el inicio del ciclo.</p>
+          ${renderItemGroups(groupByCategory(covered))}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+function renderCosts() {
+  const filtered = filterItems(shoppingTotal);
+  const coverage = pricedCoverage(filtered);
+  const weekTotals = [1,2,3,4].map(week => ({
+    week,
+    total: calcCostTotal(shoppingWeeks[String(week)] || shoppingWeeks[week] || [])
+  }));
+  const monthlyTotalCost = calcCostTotal(filtered);
+
+  const rows = filtered.slice().sort((a,b) => a.name.localeCompare(b.name)).map(item => {
+    const record = getPriceRecord(item.name);
+    const purchaseQty = qtyToPurchaseUnits(item.qty, record);
+    const cost = itemEstimatedCost(item);
+    return `
+      <tr>
+        <td>
+          <strong>${item.name}</strong>
+          <div class="small" style="margin-top:4px;">Consumo del ciclo: ${formatQty(item.qty, item.unit)}</div>
+        </td>
+        <td>${formatNumber(purchaseQty)} ${record.unitLabel}</td>
+        <td><input class="unit-input" type="text" value="${record.unitLabel}" data-price-name="${item.name}" data-field="unitLabel"></td>
+        <td><input class="factor-input" type="number" min="0.0001" step="0.01" value="${record.factor}" data-price-name="${item.name}" data-field="factor"></td>
+        <td><input class="price-input" type="number" min="0" step="0.01" value="${record.price}" data-price-name="${item.name}" data-field="price"></td>
+        <td><strong>${formatCurrency(cost)}</strong></td>
+      </tr>
+    `;
+  }).join('');
+
+  shoppingSection.innerHTML = `
+    <div class="cost-summary">
+      <div class="cost-card">
+        <div class="small">Costo estimado del ciclo mensual</div>
+        <strong>${formatCurrency(monthlyTotalCost)}</strong>
+        <div class="small" style="margin-top:8px;">Se calcula con la base de precios editable de abajo.</div>
+      </div>
+      <div class="cost-card">
+        <div class="small">Cobertura de precios cargados</div>
+        <strong>${coverage.ready}/${coverage.total}</strong>
+        <div class="small" style="margin-top:8px;">Faltan ${coverage.missing} ingredientes con precio mayor a cero.</div>
+      </div>
+      ${weekTotals.map(({week, total}) => `
+        <div class="cost-card">
+          <div class="small">Semana ${week}</div>
+          <strong>${formatCurrency(total)}</strong>
+        </div>
+      `).join('')}
+    </div>
+
+<div class="info-box" style="margin-bottom:16px;">
+  <div class="name-box">
+    <strong>Configuración guardada en este navegador</strong>
+    <div class="small">Los nombres y la base de precios se guardan automáticamente en este dispositivo con <code>localStorage</code>. Usa exportar/importar para llevarlos a otro navegador o a otro equipo.</div>
+    <div class="config-grid" style="margin-top:10px;">
+      <label class="config-field">
+        <span class="small">Nombre de la tía</span>
+        <input class="name-input" type="text" value="${labelPerson('tia')}" data-family-key="tia">
+      </label>
+      <label class="config-field">
+        <span class="small">Nombre del tío</span>
+        <input class="name-input" type="text" value="${labelPerson('tio')}" data-family-key="tio">
+      </label>
+      <label class="config-field">
+        <span class="small">Nombre de la hija</span>
+        <input class="name-input" type="text" value="${labelPerson('hija')}" data-family-key="hija">
+      </label>
+      <label class="config-field">
+        <span class="small">Tu nombre</span>
+        <input class="name-input" type="text" value="${labelPerson('yo')}" data-family-key="yo">
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <button class="btn" id="exportConfigBtn">Exportar configuración</button>
+  <button class="btn" id="importConfigBtn">Importar configuración</button>
+  <button class="btn" id="resetPricesBtn">Restablecer solo precios</button>
+  <button class="btn" id="resetConfigBtn">Restablecer todo</button>
+</div>
+
+    <div class="price-table-wrap">
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Ingrediente</th>
+            <th>Compra estimada</th>
+            <th>Unidad de precio</th>
+            <th>Equivalencia</th>
+            <th>Precio por unidad</th>
+            <th>Costo del ciclo</th>
+          </tr>
+        </thead>
+        <tbody>${rows || `<tr><td colspan="6"><div class="empty-state">No hay ingredientes que coincidan con el filtro actual.</div></td></tr>`}</tbody>
+      </table>
+    </div>
+    <p class="helper">La columna <strong>Equivalencia</strong> indica cuántas unidades del menú forman 1 unidad de compra. Ejemplos: 1000 para kg o L, 12 para docena, 20 para un paquete de 20 rebanadas.</p>
+  `;
+
+  const resetBtn = document.getElementById('resetPricesBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetPriceDB);
+
+  const resetConfigBtn = document.getElementById('resetConfigBtn');
+  if (resetConfigBtn) resetConfigBtn.addEventListener('click', resetAppConfig);
+
+  const exportConfigBtn = document.getElementById('exportConfigBtn');
+  if (exportConfigBtn) exportConfigBtn.addEventListener('click', exportConfigFile);
+
+  const importConfigBtn = document.getElementById('importConfigBtn');
+  if (importConfigBtn) {
+    importConfigBtn.addEventListener('click', () => {
+      const input = document.getElementById('configFileInput');
+      if (input) input.click();
+    });
+  }
+
+const commitFamilyName = target => {
+  const key = target.dataset.familyKey;
+  if (!key) return;
+  const value = String(target.value || '').trim();
+  familyNames[key] = value || FAMILY_NAME_DEFAULTS[key] || key;
+  saveFamilyNames();
+  renderDays();
+  if (state.dayModalOpen) renderDayModal();
+  renderCosts();
+};
+
+shoppingSection.querySelectorAll('[data-family-key]').forEach(input => {
+  input.addEventListener('change', e => commitFamilyName(e.target));
+  input.addEventListener('blur', e => commitFamilyName(e.target));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+});
+
+const commitPriceField = target => {
+  const name = target.dataset.priceName;
+  const field = target.dataset.field;
+  if (!name || !field) return;
+
+  const current = Object.assign({}, getPriceRecord(name));
+  current[field] = field === 'unitLabel' ? String(target.value || '').trim() : Number(target.value);
+
+  if (field !== 'unitLabel' && !Number.isFinite(current[field])) {
+    current[field] = field === 'factor' ? 1 : 0;
+  }
+  if (field === 'factor' && current[field] <= 0) current[field] = 1;
+  if (field === 'unitLabel' && !current[field]) {
+    current[field] = getPriceRecord(name).unitLabel || 'kg';
+  }
+
+  priceDB[name] = current;
+  savePriceDB();
+  renderCosts();
+};
+
+shoppingSection.querySelectorAll('[data-price-name]').forEach(input => {
+  input.addEventListener('change', e => commitPriceField(e.target));
+  input.addEventListener('blur', e => commitPriceField(e.target));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+});
+}
+
+
+function renderShopping() {
+  if (state.shoppingView === 'totales') {
+    shoppingSection.innerHTML = renderShoppingTotals();
+    return;
+  }
+  if (state.shoppingView === 'costos') {
+    renderCosts();
+    return;
+  }
+  const weekNumber = Number(state.shoppingView.split('-')[1]);
+  shoppingSection.innerHTML = renderShoppingWeek(weekNumber);
+}
+
+function openDayModal(idx) {
+  state.dayIndex = idx;
+  state.mealKey = 'desayuno';
+  state.dayModalOpen = true;
+  dayOverlay.classList.add('open');
+  dayOverlay.setAttribute('aria-hidden', 'false');
+  renderDayModal();
+}
+
+function closeDayModal() {
+  state.dayModalOpen = false;
+  dayOverlay.classList.remove('open');
+  dayOverlay.setAttribute('aria-hidden', 'true');
+}
+
+function openShoppingModal() {
+  state.shoppingModalOpen = true;
+  state.shoppingView = state.shoppingView || 'totales';
+  shoppingOverlay.classList.add('open');
+  shoppingOverlay.setAttribute('aria-hidden', 'false');
+  try {
+    renderShoppingTabs();
+    renderShopping();
+  } catch (err) {
+    console.error('No se pudo abrir la vista de compras:', err);
+    shoppingSection.innerHTML = '<div class="empty-state">No se pudo cargar la vista de compras. Revisa la base de precios o recarga la página.</div>';
+  }
+}
+
+function closeShoppingModal() {
+  state.shoppingModalOpen = false;
+  shoppingOverlay.classList.remove('open');
+  shoppingOverlay.setAttribute('aria-hidden', 'true');
+}
+
+const shoppingBtnEl = document.getElementById('shoppingBtn');
+const closeDayModalEl = document.getElementById('closeDayModal');
+const closeShoppingModalEl = document.getElementById('closeShoppingModal');
+
+if (shoppingBtnEl) shoppingBtnEl.addEventListener('click', openShoppingModal);
+if (closeDayModalEl) closeDayModalEl.addEventListener('click', closeDayModal);
+if (closeShoppingModalEl) closeShoppingModalEl.addEventListener('click', closeShoppingModal);
+window.openShoppingModal = openShoppingModal;
+window.closeShoppingModal = closeShoppingModal;
+searchInput.addEventListener('input', e => {
+  state.search = e.target.value;
+  renderShopping();
+});
+
+dayOverlay.addEventListener('click', e => { if (e.target === dayOverlay) closeDayModal(); });
+shoppingOverlay.addEventListener('click', e => { if (e.target === shoppingOverlay) closeShoppingModal(); });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (state.dayModalOpen) closeDayModal();
+    if (state.shoppingModalOpen) closeShoppingModal();
+  }
+});
+
+function init() {
+  renderWeekTabs();
+  renderDays();
+  renderShoppingTabs();
+  saveConfig();
+
+  if (configFileInput) {
+    configFileInput.addEventListener('change', async e => {
+      const [file] = e.target.files || [];
+      await handleImportFile(file);
+      e.target.value = '';
+    });
+  }
+}
+
+init();
