@@ -1,0 +1,402 @@
+{
+  "version": 1,
+  "exportedAt": "2026-04-20T01:18:32.306Z",
+  "familyNames": {
+    "tia": "Tía Lo",
+    "tio": "Tío Macho",
+    "hija": "Michi",
+    "yo": "Mike"
+  },
+  "priceDB": {
+    "aceite de oliva": {
+      "unitLabel": "L",
+      "factor": 1000,
+      "price": 5995
+    },
+    "aceitunas": {
+      "unitLabel": "kg",
+      "factor": 1900,
+      "price": 4695
+    },
+    "aguacate": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2000
+    },
+    "ajo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1800
+    },
+    "ajonjoli": {
+      "unitLabel": "kg",
+      "factor": 100,
+      "price": 1240
+    },
+    "apio": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1000
+    },
+    "arroz integral cocido": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 980
+    },
+    "atun en agua escurrido": {
+      "unitLabel": "kg",
+      "factor": 816,
+      "price": 5995
+    },
+    "avena": {
+      "unitLabel": "kg",
+      "factor": 1590,
+      "price": 4995
+    },
+    "banano": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 880
+    },
+    "berenjena": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2000
+    },
+    "brocoli": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2000
+    },
+    "calabaza": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1300
+    },
+    "camaron": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 10300
+    },
+    "camote": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1500
+    },
+    "canela": {
+      "unitLabel": "kg",
+      "factor": 454,
+      "price": 2595
+    },
+    "cebolla": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1500
+    },
+    "cebolla morada": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2000
+    },
+    "chayote": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 580
+    },
+    "chia": {
+      "unitLabel": "kg",
+      "factor": 907,
+      "price": 4695
+    },
+    "chicharos": {
+      "unitLabel": "kg",
+      "factor": 590,
+      "price": 900
+    },
+    "chile dulce": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2795
+    },
+    "claras de huevo": {
+      "unitLabel": "unidad",
+      "factor": 60,
+      "price": 5600
+    },
+    "coliflor": {
+      "unitLabel": "kg",
+      "factor": 1130,
+      "price": 1330
+    },
+    "couscous integral cocido": {
+      "unitLabel": "kg",
+      "factor": 800,
+      "price": 3795
+    },
+    "culantro": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1350
+    },
+    "curry en polvo": {
+      "unitLabel": "kg",
+      "factor": 454,
+      "price": 2995
+    },
+    "ensalada mixta": {
+      "unitLabel": "kg",
+      "factor": 750,
+      "price": 2495
+    },
+    "esparragos": {
+      "unitLabel": "kg",
+      "factor": 498,
+      "price": 3495
+    },
+    "espinaca": {
+      "unitLabel": "kg",
+      "factor": 200,
+      "price": 300
+    },
+    "filete de pescado blanco": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2040
+    },
+    "frijol rojo cocido": {
+      "unitLabel": "kg",
+      "factor": 8000,
+      "price": 11995
+    },
+    "frijoles negros cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 10795
+    },
+    "frijoles rojos cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 11995
+    },
+    "frijoles tiernos cocidos": {
+      "unitLabel": "kg",
+      "factor": 500,
+      "price": 1750
+    },
+    "fruta fresca": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 600
+    },
+    "frutos rojos": {
+      "unitLabel": "kg",
+      "factor": 1810,
+      "price": 11795
+    },
+    "galletas integrales": {
+      "unitLabel": "paquete",
+      "factor": 20,
+      "price": 440
+    },
+    "garbanzos cocidos": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1850
+    },
+    "hongos": {
+      "unitLabel": "kg",
+      "factor": 425,
+      "price": 860
+    },
+    "huevo": {
+      "unitLabel": "unidad",
+      "factor": 60,
+      "price": 5400
+    },
+    "hummus": {
+      "unitLabel": "kg",
+      "factor": 900,
+      "price": 4695
+    },
+    "leche de coco light": {
+      "unitLabel": "L",
+      "factor": 400,
+      "price": 1346
+    },
+    "leche descremada": {
+      "unitLabel": "L",
+      "factor": 1000,
+      "price": 1050
+    },
+    "lechuga": {
+      "unitLabel": "kg",
+      "factor": 200,
+      "price": 750
+    },
+    "lentejas cocidas": {
+      "unitLabel": "kg",
+      "factor": 400,
+      "price": 650
+    },
+    "limon": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1020
+    },
+    "maiz": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2995
+    },
+    "mantequilla de mani": {
+      "unitLabel": "kg",
+      "factor": 1130,
+      "price": 2895
+    },
+    "manzana": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1250
+    },
+    "nueces": {
+      "unitLabel": "kg",
+      "factor": 300,
+      "price": 1500
+    },
+    "pan integral": {
+      "unitLabel": "unidad",
+      "factor": 34,
+      "price": 2695
+    },
+    "papa": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 4000
+    },
+    "pasta integral cocida": {
+      "unitLabel": "kg",
+      "factor": 500,
+      "price": 2400
+    },
+    "pechuga de pollo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2300
+    },
+    "pepino": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 350
+    },
+    "pescado azul economico": {
+      "unitLabel": "kg",
+      "factor": 2000,
+      "price": 15000
+    },
+    "platano maduro horneado": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 825
+    },
+    "pollo molido magro": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 2300
+    },
+    "queso bajo en grasa": {
+      "unitLabel": "kg",
+      "factor": 2260,
+      "price": 6395
+    },
+    "queso fresco bajo en grasa": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 6000
+    },
+    "queso parmesano": {
+      "unitLabel": "kg",
+      "factor": 600,
+      "price": 7095
+    },
+    "quinoa cocida": {
+      "unitLabel": "kg",
+      "factor": 1360,
+      "price": 4495
+    },
+    "repollo": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 400
+    },
+    "res magra": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 3920
+    },
+    "salsa de soya baja en sodio": {
+      "unitLabel": "kg",
+      "factor": 295,
+      "price": 4050
+    },
+    "salsa de tomate natural": {
+      "unitLabel": "kg",
+      "factor": 3840,
+      "price": 6775
+    },
+    "salsa teriyaki baja en azucar": {
+      "unitLabel": "kg",
+      "factor": 148,
+      "price": 810
+    },
+    "sardinas en agua": {
+      "unitLabel": "kg",
+      "factor": 160,
+      "price": 620
+    },
+    "tofu firme": {
+      "unitLabel": "kg",
+      "factor": 1360,
+      "price": 6495
+    },
+    "tomate": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1490
+    },
+    "tomate triturado": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1490
+    },
+    "tortilla integral": {
+      "unitLabel": "unidad",
+      "factor": 10,
+      "price": 960
+    },
+    "vainicas": {
+      "unitLabel": "kg",
+      "factor": 500,
+      "price": 1020
+    },
+    "yogurt griego natural": {
+      "unitLabel": "kg",
+      "factor": 907,
+      "price": 2595
+    },
+    "yuca cocida": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 1250
+    },
+    "zanahoria": {
+      "unitLabel": "kg",
+      "factor": 1000,
+      "price": 650
+    },
+    "zucchini": {
+      "unitLabel": "kg",
+      "factor": 1200,
+      "price": 3395
+    }
+  }
+}
