@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "exportedAt": "2026-04-20T01:18:32.306Z",
   "familyNames": {
     "tia": "Tía Lo",
     "tio": "Tío Macho",
@@ -208,7 +209,7 @@
       "price": 860
     },
     "huevo": {
-      "unitLabel": "docena",
+      "unitLabel": "unidad",
       "factor": 60,
       "price": 5400
     },
@@ -263,7 +264,7 @@
       "price": 1500
     },
     "pan integral": {
-      "unitLabel": "paquete",
+      "unitLabel": "unidad",
       "factor": 34,
       "price": 2695
     },
@@ -275,7 +276,7 @@
     "pasta integral cocida": {
       "unitLabel": "kg",
       "factor": 500,
-      "price": 2480
+      "price": 2400
     },
     "pechuga de pollo": {
       "unitLabel": "kg",
@@ -314,7 +315,7 @@
     },
     "queso parmesano": {
       "unitLabel": "kg",
-      "factor": 680,
+      "factor": 600,
       "price": 7095
     },
     "quinoa cocida": {
@@ -334,7 +335,7 @@
     },
     "salsa de soya baja en sodio": {
       "unitLabel": "kg",
-      "factor": 296,
+      "factor": 295,
       "price": 4050
     },
     "salsa de tomate natural": {
@@ -368,7 +369,7 @@
       "price": 1490
     },
     "tortilla integral": {
-      "unitLabel": "paquete",
+      "unitLabel": "unidad",
       "factor": 10,
       "price": 960
     },
