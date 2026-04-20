@@ -93,16 +93,19 @@ code {
   line-height:1.5;
 }
 .overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.74);
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  padding:12px;
-  z-index:50;
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,.74);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  z-index: 9999;
 }
-.overlay.open { display:flex; }
+
+.overlay.open {
+  display: flex;
+}
 .modal {
   width:min(100%, 960px);
   max-height:min(90vh, 920px);
