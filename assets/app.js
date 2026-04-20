@@ -2,10 +2,10 @@ const IMAGE_BASE_PATH = 'recetas/';
 const IMAGE_EXTENSIONS = ['jpg','jpeg','png','webp'];
 
 const FAMILY_NAME_DEFAULTS = {
-  tia: 'Tía Lo',
-  tio: 'Tío Macho',
-  hija: 'Michi',
-  yo: 'Mike'
+  tia: 'Tía',
+  tio: 'Tío',
+  hija: 'Hija',
+  yo: 'Tú'
 };
 
 const PRICE_DB_DEFAULTS = {"aceite de oliva": {"unitLabel": "L", "factor": 1000, "price": 0}, "aceitunas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "aguacate": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ajo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ajonjoli": {"unitLabel": "kg", "factor": 1000, "price": 0}, "apio": {"unitLabel": "kg", "factor": 1000, "price": 0}, "arroz integral cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "atun en agua escurrido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "avena": {"unitLabel": "kg", "factor": 1000, "price": 0}, "banano": {"unitLabel": "kg", "factor": 1000, "price": 0}, "berenjena": {"unitLabel": "kg", "factor": 1000, "price": 0}, "brocoli": {"unitLabel": "kg", "factor": 1000, "price": 0}, "calabaza": {"unitLabel": "kg", "factor": 1000, "price": 0}, "camaron": {"unitLabel": "kg", "factor": 1000, "price": 0}, "camote": {"unitLabel": "kg", "factor": 1000, "price": 0}, "canela": {"unitLabel": "kg", "factor": 1000, "price": 0}, "cebolla": {"unitLabel": "kg", "factor": 1000, "price": 0}, "cebolla morada": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chayote": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chia": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chicharos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "chile dulce": {"unitLabel": "kg", "factor": 1000, "price": 0}, "claras de huevo": {"unitLabel": "unidad", "factor": 1, "price": 0}, "coliflor": {"unitLabel": "kg", "factor": 1000, "price": 0}, "couscous integral cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "culantro": {"unitLabel": "kg", "factor": 1000, "price": 0}, "curry en polvo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "ensalada mixta": {"unitLabel": "kg", "factor": 1000, "price": 0}, "esparragos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "espinaca": {"unitLabel": "kg", "factor": 1000, "price": 0}, "filete de pescado blanco": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijol rojo cocido": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles negros cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles rojos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frijoles tiernos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "fruta fresca": {"unitLabel": "kg", "factor": 1000, "price": 0}, "frutos rojos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "galletas integrales": {"unitLabel": "paquete", "factor": 20, "price": 0}, "garbanzos cocidos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "hongos": {"unitLabel": "kg", "factor": 1000, "price": 0}, "huevo": {"unitLabel": "docena", "factor": 12, "price": 0}, "hummus": {"unitLabel": "kg", "factor": 1000, "price": 0}, "leche de coco light": {"unitLabel": "L", "factor": 1000, "price": 0}, "leche descremada": {"unitLabel": "L", "factor": 1000, "price": 0}, "lechuga": {"unitLabel": "kg", "factor": 1000, "price": 0}, "lentejas cocidas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "limon": {"unitLabel": "kg", "factor": 1000, "price": 0}, "maiz": {"unitLabel": "kg", "factor": 1000, "price": 0}, "mantequilla de mani": {"unitLabel": "kg", "factor": 1000, "price": 0}, "manzana": {"unitLabel": "kg", "factor": 1000, "price": 0}, "nueces": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pan integral": {"unitLabel": "paquete", "factor": 20, "price": 0}, "papa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pasta integral cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pechuga de pollo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pepino": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pescado azul economico": {"unitLabel": "kg", "factor": 1000, "price": 0}, "platano maduro horneado": {"unitLabel": "kg", "factor": 1000, "price": 0}, "pollo molido magro": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso bajo en grasa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso fresco bajo en grasa": {"unitLabel": "kg", "factor": 1000, "price": 0}, "queso parmesano": {"unitLabel": "kg", "factor": 1000, "price": 0}, "quinoa cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "repollo": {"unitLabel": "kg", "factor": 1000, "price": 0}, "res magra": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa de soya baja en sodio": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa de tomate natural": {"unitLabel": "kg", "factor": 1000, "price": 0}, "salsa teriyaki baja en azucar": {"unitLabel": "kg", "factor": 1000, "price": 0}, "sardinas en agua": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tofu firme": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tomate": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tomate triturado": {"unitLabel": "kg", "factor": 1000, "price": 0}, "tortilla integral": {"unitLabel": "paquete", "factor": 8, "price": 0}, "vainicas": {"unitLabel": "kg", "factor": 1000, "price": 0}, "yogurt griego natural": {"unitLabel": "kg", "factor": 1000, "price": 0}, "yuca cocida": {"unitLabel": "kg", "factor": 1000, "price": 0}, "zanahoria": {"unitLabel": "kg", "factor": 1000, "price": 0}, "zucchini": {"unitLabel": "kg", "factor": 1000, "price": 0}};
@@ -229,6 +229,29 @@ function formatQty(qty, unit) {
   return `${formatNumber(value)} ${unit}`;
 }
 
+function getPresentPortions(meal) {
+  return ['tia','tio','yo','hija']
+    .map(person => ({ person, data: meal.portions[person] }))
+    .filter(entry => entry.data && entry.data.present);
+}
+
+function getPortionShare(meal, person) {
+  const present = getPresentPortions(meal);
+  const total = present.reduce((sum, entry) => sum + (Number(entry.data.multiplier) || 0), 0);
+  const current = meal.portions[person];
+  if (!current || !current.present || total <= 0) return 0;
+  return (Number(current.multiplier) || 0) / total;
+}
+
+function getPersonIngredientPortions(meal, person) {
+  const share = getPortionShare(meal, person);
+  return meal.ingredients.map(ingredient => ({
+    name: ingredient.name,
+    unit: ingredient.unit,
+    qty: ingredient.qty * share
+  }));
+}
+
 function groupByCategory(items) {
   const groups = {
     'Proteínas y lácteos': [],
@@ -347,10 +370,13 @@ function renderMealDetail() {
         </div>
       `;
     }
+    const servingList = getPersonIngredientPortions(meal, person).map(item => `
+      <li><span>${item.name}</span><strong>${formatQty(item.qty, item.unit)}</strong></li>
+    `).join('');
     return `
       <div class="person">
         <h4>${labelPerson(person)}</h4>
-        <p class="small" style="margin-top:6px;">Porción: <strong>${p.multiplier}x</strong> la receta estándar</p>
+        <p class="small" style="margin-top:6px;">Cantidad exacta que le corresponde en este plato.</p>
         <p class="small" style="margin-top:6px;">${personNotes(person, state.mealKey)}</p>
         <div class="kpi-line">
           <span class="tag">${p.cal} kcal</span>
@@ -358,6 +384,10 @@ function renderMealDetail() {
           <span class="tag">${p.carbs} g carbos</span>
           <span class="tag">${p.fat} g grasa</span>
           <span class="tag">${p.fiber} g fibra</span>
+        </div>
+        <div class="portion-box">
+          <div class="portion-title">Servir aproximadamente:</div>
+          <ul class="clean compact">${servingList}</ul>
         </div>
       </div>
     `;
@@ -407,7 +437,7 @@ function renderMealDetail() {
 function renderDayModal() {
   const day = currentDay();
   dayModalTitle.textContent = day.title;
-  dayModalText.textContent = 'Selecciona uno de los 4 tiempos de comida para ver receta base, ingredientes totales del día, macros, micros y porciones individuales.';
+  dayModalText.textContent = 'Selecciona uno de los 4 tiempos de comida para ver receta base, ingredientes totales del día, macros, micros y cantidades exactas por persona.';
   renderMealButtons();
   renderMealDetail();
 }
