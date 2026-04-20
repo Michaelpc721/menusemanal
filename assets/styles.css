@@ -178,6 +178,21 @@ ul.clean li {
   border-bottom:1px solid rgba(148,163,184,.12);
 }
 ul.clean li:last-child { border-bottom:none; }
+
+ul.clean.compact li {
+  padding:7px 0;
+  font-size:14px;
+}
+.portion-box {
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(148,163,184,.12);
+}
+.portion-title {
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
 .people {
   display:grid;
   grid-template-columns:1fr;
