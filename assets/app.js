@@ -229,6 +229,41 @@ function formatQty(qty, unit) {
   return `${formatNumber(value)} ${unit}`;
 }
 
+
+function getPriceRecord(name) {
+  const fallback = PRICE_DB_DEFAULTS[name] || { unitLabel: 'kg', factor: 1000, price: 0 };
+  const raw = priceDB[name] || fallback;
+  const unitLabel = String(raw.unitLabel ?? fallback.unitLabel ?? 'kg').trim() || (fallback.unitLabel || 'kg');
+  let factor = Number(raw.factor);
+  let price = Number(raw.price);
+  if (!Number.isFinite(factor) || factor <= 0) factor = Number(fallback.factor) || 1;
+  if (!Number.isFinite(price) || price < 0) price = 0;
+  return { unitLabel, factor, price };
+}
+
+function qtyToPurchaseUnits(qty, record) {
+  const amount = Number(qty);
+  const factor = Number(record && record.factor);
+  if (!Number.isFinite(amount) || amount <= 0) return 0;
+  if (!Number.isFinite(factor) || factor <= 0) return amount;
+  return amount / factor;
+}
+
+function itemEstimatedCost(item) {
+  const record = getPriceRecord(item.name);
+  return qtyToPurchaseUnits(item.qty, record) * record.price;
+}
+
+function calcCostTotal(items) {
+  return (items || []).reduce((sum, item) => sum + itemEstimatedCost(item), 0);
+}
+
+function pricedCoverage(items) {
+  const total = (items || []).length;
+  const ready = (items || []).reduce((count, item) => count + (getPriceRecord(item.name).price > 0 ? 1 : 0), 0);
+  return { total, ready, missing: Math.max(total - ready, 0) };
+}
+
 function getPresentPortions(meal) {
   return ['tia','tio','yo','hija']
     .map(person => ({ person, data: meal.portions[person] }))
@@ -588,8 +623,6 @@ function renderCosts() {
   <button class="btn" id="resetPricesBtn">Restablecer solo precios</button>
   <button class="btn" id="resetConfigBtn">Restablecer todo</button>
 </div>
-      <button class="btn" id="resetPricesBtn">Restablecer base de precios</button>
-    </div>
 
     <div class="price-table-wrap">
       <table class="price-table">
@@ -626,31 +659,59 @@ function renderCosts() {
     });
   }
 
-  shoppingSection.querySelectorAll('[data-family-key]').forEach(input => {
-    input.addEventListener('input', e => {
-      const key = e.target.dataset.familyKey;
-      const value = String(e.target.value || '').trim();
-      familyNames[key] = value || FAMILY_NAME_DEFAULTS[key] || key;
-      saveFamilyNames();
-      renderDays();
-      if (state.dayModalOpen) renderDayModal();
-      renderCosts();
-    });
-  });
+const commitFamilyName = target => {
+  const key = target.dataset.familyKey;
+  if (!key) return;
+  const value = String(target.value || '').trim();
+  familyNames[key] = value || FAMILY_NAME_DEFAULTS[key] || key;
+  saveFamilyNames();
+  renderDays();
+  if (state.dayModalOpen) renderDayModal();
+  renderCosts();
+};
 
-  shoppingSection.querySelectorAll('[data-price-name]').forEach(input => {
-    input.addEventListener('input', e => {
-      const name = e.target.dataset.priceName;
-      const field = e.target.dataset.field;
-      const current = Object.assign({}, getPriceRecord(name));
-      current[field] = field === 'unitLabel' ? e.target.value : Number(e.target.value);
-      if (field !== 'unitLabel' && !Number.isFinite(current[field])) current[field] = field === 'factor' ? 1 : 0;
-      if (field === 'factor' && current[field] <= 0) current[field] = 1;
-      priceDB[name] = current;
-      savePriceDB();
-      renderCosts();
-    });
+shoppingSection.querySelectorAll('[data-family-key]').forEach(input => {
+  input.addEventListener('change', e => commitFamilyName(e.target));
+  input.addEventListener('blur', e => commitFamilyName(e.target));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
   });
+});
+
+const commitPriceField = target => {
+  const name = target.dataset.priceName;
+  const field = target.dataset.field;
+  if (!name || !field) return;
+
+  const current = Object.assign({}, getPriceRecord(name));
+  current[field] = field === 'unitLabel' ? String(target.value || '').trim() : Number(target.value);
+
+  if (field !== 'unitLabel' && !Number.isFinite(current[field])) {
+    current[field] = field === 'factor' ? 1 : 0;
+  }
+  if (field === 'factor' && current[field] <= 0) current[field] = 1;
+  if (field === 'unitLabel' && !current[field]) {
+    current[field] = getPriceRecord(name).unitLabel || 'kg';
+  }
+
+  priceDB[name] = current;
+  savePriceDB();
+  renderCosts();
+};
+
+shoppingSection.querySelectorAll('[data-price-name]').forEach(input => {
+  input.addEventListener('change', e => commitPriceField(e.target));
+  input.addEventListener('blur', e => commitPriceField(e.target));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+});
 }
 
 
@@ -684,10 +745,16 @@ function closeDayModal() {
 
 function openShoppingModal() {
   state.shoppingModalOpen = true;
+  state.shoppingView = state.shoppingView || 'totales';
   shoppingOverlay.classList.add('open');
   shoppingOverlay.setAttribute('aria-hidden', 'false');
-  renderShoppingTabs();
-  renderShopping();
+  try {
+    renderShoppingTabs();
+    renderShopping();
+  } catch (err) {
+    console.error('No se pudo abrir la vista de compras:', err);
+    shoppingSection.innerHTML = '<div class="empty-state">No se pudo cargar la vista de compras. Revisa la base de precios o recarga la página.</div>';
+  }
 }
 
 function closeShoppingModal() {
@@ -696,9 +763,15 @@ function closeShoppingModal() {
   shoppingOverlay.setAttribute('aria-hidden', 'true');
 }
 
-document.getElementById('shoppingBtn').addEventListener('click', openShoppingModal);
-document.getElementById('closeDayModal').addEventListener('click', closeDayModal);
-document.getElementById('closeShoppingModal').addEventListener('click', closeShoppingModal);
+const shoppingBtnEl = document.getElementById('shoppingBtn');
+const closeDayModalEl = document.getElementById('closeDayModal');
+const closeShoppingModalEl = document.getElementById('closeShoppingModal');
+
+if (shoppingBtnEl) shoppingBtnEl.addEventListener('click', openShoppingModal);
+if (closeDayModalEl) closeDayModalEl.addEventListener('click', closeDayModal);
+if (closeShoppingModalEl) closeShoppingModalEl.addEventListener('click', closeShoppingModal);
+window.openShoppingModal = openShoppingModal;
+window.closeShoppingModal = closeShoppingModal;
 searchInput.addEventListener('input', e => {
   state.search = e.target.value;
   renderShopping();
