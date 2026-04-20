@@ -298,6 +298,43 @@ function filterItems(items) {
   return items.filter(item => item.name.toLowerCase().includes(needle));
 }
 
+function getPriceRecord(name) {
+  const record = priceDB[name] || PRICE_DB_DEFAULTS[name] || { unitLabel: 'kg', factor: 1000, price: 0 };
+  const factor = Number(record.factor);
+  const price = Number(record.price);
+  return {
+    unitLabel: String(record.unitLabel || 'kg').trim() || 'kg',
+    factor: Number.isFinite(factor) && factor > 0 ? factor : 1,
+    price: Number.isFinite(price) && price >= 0 ? price : 0
+  };
+}
+
+function qtyToPurchaseUnits(qty, record) {
+  const amount = Number(qty);
+  const factor = Number(record && record.factor);
+  if (!Number.isFinite(amount) || amount <= 0) return 0;
+  if (!Number.isFinite(factor) || factor <= 0) return amount;
+  return amount / factor;
+}
+
+function itemEstimatedCost(item) {
+  const record = getPriceRecord(item.name);
+  return qtyToPurchaseUnits(item.qty, record) * record.price;
+}
+
+function calcCostTotal(items) {
+  return (items || []).reduce((sum, item) => sum + itemEstimatedCost(item), 0);
+}
+
+function pricedCoverage(items) {
+  const total = (items || []).length;
+  const ready = (items || []).reduce((count, item) => {
+    const record = getPriceRecord(item.name);
+    return count + (record.price > 0 ? 1 : 0);
+  }, 0);
+  return { total, ready, missing: Math.max(total - ready, 0) };
+}
+
 function renderItemGroups(groups) {
   const sections = Object.entries(groups).map(([title, items]) => {
     if (!items.length) return '';
